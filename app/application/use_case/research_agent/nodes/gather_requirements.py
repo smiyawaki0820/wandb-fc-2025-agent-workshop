@@ -14,7 +14,6 @@ from infrastructure.llm_chain.enums import OpenAIModelName
 class NextNode(BaseEnum):
     FEEDBACK_REQUIREMENTS = "FeedbackRequirementsNode"
     BUILD_RESEARCH_PLAN = "BuildResearchPlanNode"
-    # SET_GOAL = "SetGoalNode"
 
 
 class GatherRequirementsNode(BaseOpenAIChain):

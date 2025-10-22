@@ -1,5 +1,6 @@
 from enum import Enum
-from typing import Iterator, Literal
+from typing import Literal
+from collections.abc import Iterator
 
 
 class BaseEnum(Enum):
