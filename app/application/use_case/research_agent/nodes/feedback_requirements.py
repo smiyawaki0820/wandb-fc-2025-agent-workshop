@@ -23,9 +23,12 @@ class FeedbackRequirementsNode(BaseChain):
         super().__init__(log_level)
 
     def __call__(self, state: ResearchAgentState) -> Command[Literal["GatherRequirementsNode"]]:
-        if last_message := state.messages[-1]:
-            # human_feedback = interrupt(last_message.content)
-            # if human_feedback is None:
-            human_feedback = self.default_feedback
-            state.messages.append(HumanMessage(content=human_feedback))
+        self.log(object="feedback_requirements", message=f"state: {state}")
+        human_feedback = interrupt(
+            {
+                "node": self.__name__,
+                "inquiry_items": state.inquiry_items,
+            },
+        ) or self.default_feedback
+        state.messages.append(HumanMessage(content=human_feedback))
         return Command(goto=NextNode.GATHER_REQUIREMENTS.value, update=state)

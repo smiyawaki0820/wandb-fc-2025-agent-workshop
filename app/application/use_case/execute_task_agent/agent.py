@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.memory import InMemorySaver, MemorySaver
 
 from application.use_case.execute_task_agent.models import (
     ExecuteTaskAgentInputState,
@@ -80,10 +80,11 @@ class ExecuteTaskAgent(LangGraphAgent):
         workflow.add_node(NodeNames.MANAGE_TASK.value, self.manage_task_node)
         workflow.set_entry_point(NodeNames.RECEIVE_TASK.value)
         workflow.set_finish_point(NodeNames.MANAGE_TASK.value)
-        return workflow.compile()
+        return workflow.compile(checkpointer=self.checkpointer)
 
 
 def create_graph() -> CompiledStateGraph:
+    checkpointer = InMemorySaver()
     blob_manager = LocalBlobManager()
     jina_client = JinaClient()
     search_client = ArxivSearchClient(blob_manager)
@@ -91,11 +92,12 @@ def create_graph() -> CompiledStateGraph:
         blob_manager=blob_manager,
         search_client=search_client,
         jina_client=jina_client,
-        checkpointer=None,
+        checkpointer=checkpointer,
         log_level=LogLevel.DEBUG,
         recursion_limit=1000,
     )
     return agent.graph
+
 
 
 if __name__ == "__main__":

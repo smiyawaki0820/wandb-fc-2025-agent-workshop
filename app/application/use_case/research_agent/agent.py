@@ -1,8 +1,9 @@
 from functools import partial
 
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.memory import InMemorySaver, MemorySaver
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
+from langgraph.types import Command
 
 from application.use_case.research_agent.models.state import (
     ResearchAgentState,
@@ -18,7 +19,7 @@ from application.use_case.research_agent.nodes import (
     EvaluateTaskNode,
     GenerateReportNode,
 )
-from domain.enums import BaseEnum
+from domain.enums import BaseEnum, ManagedTaskStatus
 from domain.models import ManagedDocument
 from domain.base_agent import LangGraphAgent
 from core.logging import log, LogLevel
@@ -49,11 +50,6 @@ class ResearchAgent(LangGraphAgent):
         log_level: LogLevel = LogLevel.INFO,
         recursion_limit: int = 1000,
     ) -> None:
-        self.log = partial(log, log_level=log_level, subject=self.__name__)
-        self.checkpointer = checkpointer
-        self.recursion_limit = recursion_limit
-        self.blob_manager = blob_manager
-
         self.gather_requirements_node = GatherRequirementsNode(
             model_name=OpenAIModelName.GPT_5_NANO,
             blob_manager=blob_manager,
@@ -87,17 +83,11 @@ class ResearchAgent(LangGraphAgent):
             log_level=log_level,
             prompt_path="storage/prompts/research_agent/nodes/generate_report.jinja",
         )
-        self.graph = self._create_graph()
-        # super().__init__(
-        #     log_level=settings.LOG_LEVEL,
-        #     checkpointer=checkpointer,
-        #     recursion_limit=recursion_limit,
-        # )
-        pass
-
-    @property
-    def __name__(self) -> str:
-        return str(self.__class__.__name__)
+        super().__init__(
+            log_level=log_level,
+            checkpointer=checkpointer,
+            recursion_limit=recursion_limit,
+        )
 
     def _create_graph(self) -> CompiledStateGraph:
         workflow = StateGraph(
@@ -120,12 +110,13 @@ class ResearchAgent(LangGraphAgent):
         input_state = ExecuteTaskAgentInputState(goal=state.goal, task=state.task)
         output = self.execute_task_agent.graph.invoke(
             input_state,
-            config={"recursion_limit": self.recursion_limit},
+            config={"recursion_limit": self.recursion_limit, "thread_id": "subtask"},
         )
         return {"managed_documents": output.get("managed_documents") or []}
 
 
 def create_graph() -> CompiledStateGraph:
+    checkpointer = InMemorySaver()
     blob_manager = LocalBlobManager()
     search_client = ArxivSearchClient(blob_manager)
     # search_client = PerplexitySearchClient(blob_manager)
@@ -134,17 +125,46 @@ def create_graph() -> CompiledStateGraph:
         blob_manager=blob_manager,
         search_client=search_client,
         jina_client=jina_client,
-        checkpointer=None,
+        checkpointer=checkpointer,
         log_level=LogLevel.DEBUG,
         recursion_limit=1000,
     )
     return agent.graph
 
 
+def invoke_graph(
+    graph: CompiledStateGraph,
+    input_data: dict | Command,
+    config: dict,
+) -> dict:
+    result = graph.invoke(
+        input=input_data,
+        config=config,
+    )
+    for interrupt in result.get("__interrupt__", []):
+        if interrupt_data := getattr(interrupt, "value", None):
+            match interrupt_data.get("node"):
+                case NodeNames.FEEDBACK_REQUIREMENTS.value:
+                    answers = []
+                    # 全ての質問に回答を求める場合
+                    for inquiry_item in interrupt_data.get("inquiry_items", []):
+                        if inquiry_item.status in [ManagedTaskStatus.NOT_STARTED]:
+                            question = inquiry_item.question
+                            user_input = str(input(f"{question} > "))
+                            answers.append(f"{question}: {user_input or 'NO ANSWER NEEDED'}")
+                    return invoke_graph(
+                        graph=graph,
+                        input_data=Command(resume="\n".join(answers)),
+                        config=config,
+                    )
+                case _:
+                    error_message = f"Unknown node: {interrupt_data.get('node')}"
+                    raise ValueError(error_message)
+    return result
+
+
 if __name__ == "__main__":
-    from pprint import pformat
     from langchain_core.messages import HumanMessage
-    from loguru import logger
 
     blob_manager = LocalBlobManager()
     graph = create_graph()
@@ -152,14 +172,19 @@ if __name__ == "__main__":
         HumanMessage(content="diffusion language modelについて調査"),
     ]
 
-    for _, state in graph.stream(
-        input=ResearchAgentState(messages=messages),
-        config={"recursion_limit": 1000},
-        stream_mode="updates",
-        subgraphs=True,
-    ):
-        for node_name, value in state.items():
-            logger.success(f"[{node_name}]")
-            logger.info(f"{pformat(value)}")
+    result = invoke_graph(
+        graph=graph,
+        input_data=ResearchAgentState(messages=messages),
+        config={"recursion_limit": 1000, "thread_id": "default"},
+    )
+    print(result)
 
-    import pdb; pdb.set_trace()
+    # for _, state in graph.stream(
+    #     input=ResearchAgentState(messages=messages),
+    #     config={"recursion_limit": 1000},
+    #     stream_mode="updates",
+    #     subgraphs=True,
+    # ):
+    #     for node_name, value in state.items():
+    #         logger.success(f"[{node_name}]")
+    #         logger.info(f"{pformat(value)}")

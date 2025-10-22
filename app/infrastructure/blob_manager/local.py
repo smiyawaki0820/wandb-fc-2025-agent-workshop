@@ -9,7 +9,7 @@ from infrastructure.blob_manager.base import BaseBlobManager
 
 
 class LocalBlobManager(BaseBlobManager):
-    def __init__(self, log_level: LogLevel = LogLevel.DEBUG) -> None:
+    def __init__(self, log_level: LogLevel = LogLevel.TRACE) -> None:
         super().__init__(log_level)
 
     def read_blob_as_bytes(self, blob_path: str) -> bytes:
