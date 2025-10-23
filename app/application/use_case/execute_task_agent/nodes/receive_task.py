@@ -30,7 +30,7 @@ class ReceiveTaskNode(BaseOpenAIChain):
     ) -> None:
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ExecuteTaskAgentState) -> Command[NextNode.to_options()]:
+    def __call__(self, state: ExecuteTaskAgentState) -> Command[NextNode]:
         managed_task_execution = self._run_single_task(state.task)
         match managed_task_execution.status:
             case ManagedTaskStatus.IN_PROGRESS:
@@ -45,7 +45,7 @@ class ReceiveTaskNode(BaseOpenAIChain):
                 raise ValueError(error_message)
         return Command(goto=next_node, update=state)
 
-    def _call__(self, state: ExecuteTaskAgentState) -> Command[NextNode.to_options()]:
+    def _call__(self, state: ExecuteTaskAgentState) -> Command[NextNode]:
         managed_task_executions = self.run(state.task)
         state.task_executions = managed_task_executions
         gotos = []

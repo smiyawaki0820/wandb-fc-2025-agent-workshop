@@ -26,7 +26,7 @@ class GatherRequirementsNode(BaseOpenAIChain):
     ) -> None:
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ResearchAgentState) -> Command[NextNode.to_options()]:
+    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
         gather_requirements = self.run(state.messages, state.inquiry_items)
         state.inquiry_items = gather_requirements.update_inquiry_items(state.inquiry_items)
         state.inquiry_items += gather_requirements.inquiry_items

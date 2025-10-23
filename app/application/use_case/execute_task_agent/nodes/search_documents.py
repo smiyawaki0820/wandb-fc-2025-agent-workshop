@@ -22,7 +22,7 @@ class SearchDocumentsNode(BaseChain):
         self.search_client = search_client
         super().__init__(log_level)
 
-    def __call__(self, state: ExecuteTaskAgentState) -> Command[NextNode.to_options()]:
+    def __call__(self, state: ExecuteTaskAgentState) -> Command[NextNode]:
         documents = self.run(state.task)
         managed_documents: list[ManagedDocument] = []
         for document in documents:

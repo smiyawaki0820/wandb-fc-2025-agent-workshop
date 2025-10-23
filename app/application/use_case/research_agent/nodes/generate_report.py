@@ -11,7 +11,6 @@ from domain.models import ManagedDocument
 from infrastructure.blob_manager import BaseBlobManager
 from infrastructure.llm_chain.openai_chain import BaseOpenAIChain
 from infrastructure.llm_chain.enums import OpenAIModelName
-from core.utils.dict_to_xml import dict_to_xml_str
 
 
 class NextNode(BaseEnum):
@@ -28,7 +27,7 @@ class GenerateReportNode(BaseOpenAIChain):
     ) -> None:
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ResearchAgentState) -> Command[NextNode.to_options()]:
+    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
         report = self.run(state.goal, state.managed_documents)
         state.research_report = report
         return Command(goto=NextNode.END.value, update=state)
