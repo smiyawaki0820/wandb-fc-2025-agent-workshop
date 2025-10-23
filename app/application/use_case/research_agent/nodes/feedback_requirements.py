@@ -1,5 +1,3 @@
-from typing import Literal
-
 from langchain_core.messages import HumanMessage
 from langgraph.types import Command, interrupt
 
@@ -22,7 +20,7 @@ class FeedbackRequirementsNode(BaseChain):
         self.default_feedback = default_feedback
         super().__init__(log_level)
 
-    def __call__(self, state: ResearchAgentState) -> Command[Literal["GatherRequirementsNode"]]:
+    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
         self.log(object="feedback_requirements", message=f"state: {state}")
         human_feedback = interrupt(
             {

@@ -168,8 +168,10 @@ if __name__ == "__main__":
 
     blob_manager = LocalBlobManager()
     graph = create_graph()
+
+    initial_message = str(input("調査したい内容を入力してください: "))
     messages = [
-        HumanMessage(content="diffusion language modelについて調査"),
+        HumanMessage(content=initial_message),
     ]
 
     result = invoke_graph(
@@ -178,13 +180,3 @@ if __name__ == "__main__":
         config={"recursion_limit": 1000, "thread_id": "default"},
     )
     print(result)
-
-    # for _, state in graph.stream(
-    #     input=ResearchAgentState(messages=messages),
-    #     config={"recursion_limit": 1000},
-    #     stream_mode="updates",
-    #     subgraphs=True,
-    # ):
-    #     for node_name, value in state.items():
-    #         logger.success(f"[{node_name}]")
-    #         logger.info(f"{pformat(value)}")

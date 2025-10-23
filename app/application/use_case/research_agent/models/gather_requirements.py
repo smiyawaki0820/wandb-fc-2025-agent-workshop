@@ -27,6 +27,7 @@ class ManagedInquiryItem(ManagedItem):
     priority: Priority | None = Field(
         title="優先度",
         description="最適な情報調査を行う上で優先すべき度合いを示す。",
+        default=None,
     )
     question: str = Field(title="ユーザーへの確認項目")
 
@@ -36,6 +37,7 @@ class AdditionalQuestion(BaseModel):
     priority: Priority | None = Field(
         title="優先度",
         description="最適な情報調査を行う上で優先すべき度合いを示す。",
+        default=None,
     )
 
 class GatherRequirements(BaseModel):

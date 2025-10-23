@@ -32,7 +32,7 @@ class ReadDocumentsNode(BaseOpenAIChain):
         self.jina_client = jina_client
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ExecuteTaskAgentState) -> Command[NextNode.to_options()]:
+    def __call__(self, state: ExecuteTaskAgentState) -> Command[NextNode]:
         read_document_results = self.batch_run(
             state.goal,
             state.task,
