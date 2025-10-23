@@ -92,8 +92,8 @@ class ResearchAgent(LangGraphAgent):
     def _create_graph(self) -> CompiledStateGraph:
         workflow = StateGraph(
             state_schema=ResearchAgentState,
-            input=ResearchAgentInputState,
-            output=ResearchAgentOutputState,
+            input_schema=ResearchAgentInputState,
+            output_schema=ResearchAgentOutputState,
         )
         workflow.add_node(NodeNames.GATHER_REQUIREMENTS.value, self.gather_requirements_node)
         workflow.add_node(NodeNames.FEEDBACK_REQUIREMENTS.value, self.feedback_requirements_node)
