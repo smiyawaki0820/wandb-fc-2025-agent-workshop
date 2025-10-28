@@ -2,7 +2,7 @@ from langgraph.types import Command
 
 from application.use_case.research_agent.models import ResearchAgentState
 from core.logging import LogLevel
-from domain.enums import BaseEnum
+from domain.enums import BaseEnum, TaskStatus
 from domain.models import ManagedDocument 
 from application.use_case.research_agent.models import TaskEvaluation
 from infrastructure.blob_manager.base import BaseBlobManager
@@ -26,20 +26,19 @@ class EvaluateTaskNode(BaseOpenAIChain):
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
     def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
-        return Command(goto=NextNode.GENERATE_REPORT.value, update=state)
-        # task_evaluation: TaskEvaluation = self.run(
-        #     reading_results=state.reading_results,
-        #     goal_setting=state.goal,
-        # )
-        # is_completed = all(
-        #     task.status == ManagedTaskStatus.COMPLETED
-        #     for task in task_evaluation.criteria_evals
-        # )
-        # state.retry_count += not is_completed
-        # return Command(
-        #     goto=NextNode.GENERATE_REPORT if is_completed else NextNode.DECOMPOSE_QUERY,
-        #     update=state,
-        # )
+        task_evaluation: TaskEvaluation = self.run(
+            managed_documents=state.managed_documents,
+            goal_setting=state.goal,
+        )
+        is_completed = all(
+            task.status == TaskStatus.COMPLETED
+            for task in task_evaluation.criteria_evals
+        )
+        state.retry_count += not is_completed
+        return Command(
+            goto=NextNode.GENERATE_REPORT if is_completed else NextNode.DECOMPOSE_QUERY,
+            update=state,
+        )
 
     def run(
         self,

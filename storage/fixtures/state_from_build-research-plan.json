@@ -1,167 +1,104 @@
 {
-    "final_output": null,
-    "inquiry_items": [
+    "acceptance_criteria": "本リサーチ計画が満たすべき成功基準は以下とする。1) ユーザーの潜在的ニーズを満たす日本市場の採用BPO領域におけるAIエージェント活用と主要ビジネスモデルのパターンについて、現実的な5年および10年の市場シナリオを具体的に提示できること。2) レポートの結論が再現性を担保できるよう、データソースの信頼性評価と出典の明示を行い、第三者が同条件で検証可能であること。3) 提案する調査タスクが互いに独立して並行実行でき、最短期間で成果物を得られる設計であること。4) 調査対象・手法・アウトプットの記述が専門用語を正確かつ丁寧に整理し、誤解を招かない表現であること。5) 包括的な調査が必要な場合、まとめ・サーベイ記事として全体像を把握できる信頼性の高い情報源を優先参照すること。",
+    "storyline": [
         {
-            "id": "kRKFH",
-            "status": "not_started",
-            "answer": null,
-            "priority": "high",
-            "question": "調査の目的は何ですか？（例：学術論文として引用するため、実装の参考、授業資料作成、研究の背景調査など）"
+            "section": "はじめに",
+            "description": "本計画の目的と前提、ヒアリング結果の要約と潜在ニーズの仮説を提示する。読者が本レポートの狙いをすぐに把握できる導入部とする。"
         },
         {
-            "id": "7Q2FC",
-            "status": "not_started",
-            "answer": null,
-            "priority": "high",
-            "question": "探している論文の期間は？（例：古典的な起点論文（2017年の \"Attention is All You Need\" など）、過去5年、過去10年、最新のもの）"
+            "section": "背景と調査目的",
+            "description": "日本市場における採用BPOとAIエージェントの関連性を整理し、調査の最終的な問いと期待するアウトカムを明確化する。潜在ニーズとして想定した“現実的な道筋の提示”を目的とする。"
         },
         {
-            "id": "xPNCk",
-            "status": "not_started",
-            "answer": null,
-            "priority": "high",
-            "question": "Transformers のどの分野に関心がありますか？（例：原論文・アーキテクチャ、BERT/GPT 系、Vision Transformer、効率化手法（長文対応・メモリ削減）、マルチモーダル、応用事例など）"
+            "section": "調査対象と範囲",
+            "description": "対象地域を日本市場、対象業務を採用領域と定義。出力は主要ビジネスモデルのパターンの識別と比較にフォーカス。期間は5年～10年のシナリオ分析を前提とし、データソースは信頼性の高いものを優先する。"
         },
         {
-            "id": "sCTqW",
-            "status": "not_started",
-            "answer": null,
-            "priority": "medium",
-            "question": "言語は日本語と英語どちらを優先しますか？PDF 本文や要約の言語指定はありますか？"
+            "section": "研究デザインと手法",
+            "description": "データ収集の方針（政府統計・産業レポート・企業ケーススタディ・学術論文などの優先順序）、評価・比較方法、検証手順を明示する。解析は定性的比較と定量的推定の両輪で進め、再現性を担保するための手順を記述する。"
         },
         {
-            "id": "a1ZNY",
-            "status": "not_started",
-            "answer": null,
-            "priority": "medium",
-            "question": "必要な論文数や深さの希望はありますか？（例：代表的な論文1本、主要5本、体系的レビュー10–20本、文献リスト＋要約）"
+            "section": "主要な調査テーマと評価観点",
+            "description": "市場動向（市場規模・成長ドライバー・障害要因）、ビジネスモデルのパターン（RPO/発注型、MSP、オンデマンド/クラウドソーシング、AI支援プロセスのコンサルティング型など）、採用プロセスへのAIエージェント活用のユースケース候補、規制・倫理ガバナンス、データ品質・信頼性の観点を整理・比較する。"
         },
         {
-            "id": "Fbk4T",
-            "status": "not_started",
-            "answer": null,
-            "priority": "medium",
-            "question": "優先する情報源はありますか？（例：arXiv、NeurIPS/ICLR/ACL/ICML 論文、ジャーナル、技術ブログ、プレゼン資料）"
+            "section": "タスク分解と実行計画",
+            "description": "調査を並行して実行できる独立タスクを列挙し、それぞれの主題・目的・調査範囲・優先度を設定する。タスクは再現性のある粒度で定義し、前提条件を共有する。"
         },
         {
-            "id": "k1T0v",
-            "status": "not_started",
-            "answer": null,
-            "priority": "medium",
-            "question": "出力形式の希望は？（例：PDF リンク一覧、BibTeX 形式の引用、短い要約（各論文1–3文）、詳細なレビュー）"
+            "section": "データソースと信頼性評価",
+            "description": "政府統計、業界レポート、企業ケーススタディ、学術論文などの情報源を評価する基準と優先順位を定義。出典の信頼性を示す指標（発行機関、サンプルサイズ、更新頻度、偏りの評価）を提示する。"
         },
         {
-            "id": "1dtwY",
-            "status": "not_started",
-            "answer": null,
-            "priority": "low",
-            "question": "既にご存知の論文や除外したい論文があれば教えてください（例：Vaswani et al. 2017 は含めて良いか等）"
+            "section": "リスクと倫理配慮",
+            "description": "プライバシー保護、透明性、偏りの排除、説明可能性など倫理的課題とリスクを事前に洗い出し、対応方針を明確化する。"
         },
         {
-            "id": "yF4Dt",
-            "status": "not_started",
-            "answer": null,
-            "priority": "low",
-            "question": "アクセス制限のある論文を除外する、オープンアクセスのみでよい、などの制約はありますか？"
-        },
-        {
-            "id": "IEJAv",
-            "status": "not_started",
-            "answer": null,
-            "priority": "low",
-            "question": "調査結果の利用目的（例：論文執筆、社内資料、製品化検討）と期限はありますか？"
+            "section": "成果物の出力形式と検証方法",
+            "description": "最終レポートの構成と、第三者が再現可能な検証プロトコルを含む成果物の形式を提示。アウトプットは日本語で記述し、サマリー・結論・根拠データの整合性を検証する手順を示す。"
         }
     ],
-    "goal": "",
-    "tasks": [
+    "managed_tasks": [
         {
-            "subject": "Transformersの原論文と歴史的起点について調査する",
-            "summary": "Vaswani et al. 2017 を含むトランスフォーマーの原論文と、事前の注意機構や関連する先行研究（必要に応じて2012–2017年の主要論文）をarXiv上で特定し、各論文の要点を短く要約する。",
-            "purpose": "トランスフォーマー技術の基礎を確立し、以降の派生研究を位置付けるための基準を提供する。",
-            "scope": "arXiv 上の論文本文（英語中心）。主に2012–2018年の起点論文を対象とし、必要に応じて2017–2025年の関連拡張も含める。",
+            "subject": "日本市場における採用BPO市場の規模と成長予測",
+            "summary": "日本市場の現状と5年・10年の成長予測を整理。セグメント別動向と主要ドライバーを特定する。",
+            "purpose": "市場機会の評価と戦略設計の基礎を提供する。",
+            "scope": "採用BPO領域の日本市場、5年・10年の予測、セグメント別の動向.",
             "priority": "high",
-            "id": "4QZXE",
+            "required_abilities": [
+                "SEARCH",
+                "THINKING"
+            ],
+            "id": "6RREi",
             "status": "not_started",
-            "created_at": "2025-10-07 10:42:17",
-            "updated_at": "2025-10-07 10:42:17"
+            "created_at": "2025-10-26 09:10:46",
+            "updated_at": "2025-10-26 09:10:46"
         },
         {
-            "subject": "BERT/GPT 系の主要論文について調査する",
-            "summary": "BERT, GPT 系列（BERT, RoBERTa, GPT-2/3/それ以降のアーキテクチャ拡張やスケーリング研究）に関する arXiv 論文を収集し、各論文の貢献、実験設定、主要結論を1–3文で要約する。",
-            "purpose": "自然言語処理における代表的応用例とアーキテクチャ進化を把握することで、研究・実装の出発点を示す。",
-            "scope": "arXiv 上の英語論文（2018–2025年）。原論文と主要な改良・比較研究を中心に調査する。",
+            "subject": "日本市場の主要ビジネスモデルのパターンの整理と比較",
+            "summary": "RPO/発注型、MSP、オンデマンド/クラウドソーシング、AI支援採用プロセスのコンサルティング型など、代表的なモデルを識別し、利点・制約・適用場面を比較する。",
+            "purpose": "戦略上の選択肢を明確化する。",
+            "scope": "日本市場の採用BPOにおけるビジネスモデルの主要パターンの整理と比較。",
             "priority": "high",
-            "id": "zOG9h",
+            "required_abilities": [
+                "SEARCH",
+                "THINKING"
+            ],
+            "id": "zzZKk",
             "status": "not_started",
-            "created_at": "2025-10-07 10:42:17",
-            "updated_at": "2025-10-07 10:42:17"
+            "created_at": "2025-10-26 09:10:46",
+            "updated_at": "2025-10-26 09:10:46"
         },
         {
-            "subject": "Efficient Transformers（長文対応・計算資源削減）について調査する",
-            "summary": "長文処理、メモリ／計算削減、近似注意（sparse/linear/low-rank）など効率化手法に関する arXiv 論文を収集し、アルゴリズムの要点と性能差を比較可能な形でまとめる。",
-            "purpose": "実運用や大規模データ処理を念頭に置いた手法選定の判断材料を提供する。",
-            "scope": "arXiv 上の英語論文（2018–2025年）。効率化アプローチ別（Sparse, Linear, Memory-compressed など）に整理する。",
+            "subject": "採用プロセスにおけるAIエージェント活用のユースケース候補の洗い出しと評価指標の設定",
+            "summary": "候補となるユースケースを列挙し、導入効果を評価する指標を設定する。",
+            "purpose": "実装意思決定を支援する具体的なユースケースを提示する。",
+            "scope": "日本市場の採用BPO領域でのAIエージェント活用ユースケース",
             "priority": "high",
-            "id": "c4_K8",
+            "required_abilities": [
+                "SEARCH",
+                "THINKING"
+            ],
+            "id": "5e3yB",
             "status": "not_started",
-            "created_at": "2025-10-07 10:42:17",
-            "updated_at": "2025-10-07 10:42:17"
+            "created_at": "2025-10-26 09:10:46",
+            "updated_at": "2025-10-26 09:10:46"
         },
         {
-            "subject": "レビュー・サーベイ論文を優先的に調査する",
-            "summary": "Transformers に関する体系的レビューやサーベイ論文を arXiv 上で特に抽出し、各レビューのカバレッジ（対象サブトピック・期間）と信頼性を評価する。",
-            "purpose": "短時間で全体像を把握するための高カバレッジ情報源を特定し、個別論文探索の指針とする。",
-            "scope": "arXiv 上のレビュー・サーベイ論文（2019–2025年）。体系的レビュー／メタサーベイを優先。",
+            "subject": "実現可能性と導入ロードマップのドラフト作成",
+            "summary": "5年・10年の実現可能性と導入ロードマップの初期ドラフトを作成する。",
+            "purpose": "実行可能な戦略プランの基盤を提供する。",
+            "scope": "日本市場、採用BPO領域、5年・10年のロードマップ案",
             "priority": "high",
-            "id": "3iylz",
+            "required_abilities": [
+                "THINKING",
+                "SEARCH"
+            ],
+            "id": "NigLO",
             "status": "not_started",
-            "created_at": "2025-10-07 10:42:17",
-            "updated_at": "2025-10-07 10:42:17"
-        },
-        {
-            "subject": "検索戦略と再現可能なクエリ・手順について調査する",
-            "summary": "arXiv 検索で再現可能なクエリ群（キーワード、カテゴリー、日付フィルタ、検索式例）を作成し、誰でも同じ検索結果を得られる手順を明確にする。",
-            "purpose": "他者が同一の調査を再現できるように、具体的かつ実行可能な検索手順を提供する。",
-            "scope": "arXiv の検索インターフェースと論文本文（検索クエリ例、カテゴリ: cs.CL, cs.CV, stat.ML など、日付範囲）に限定。",
-            "priority": "high",
-            "id": "tlcjR",
-            "status": "not_started",
-            "created_at": "2025-10-07 10:42:17",
-            "updated_at": "2025-10-07 10:42:17"
+            "created_at": "2025-10-26 09:10:46",
+            "updated_at": "2025-10-26 09:10:46"
         }
     ],
-    "reading_results": [],
-    "retry_count": 0,
-    "messages": [
-        {
-            "content": "Transformersの論文を探しています。",
-            "additional_kwargs": {},
-            "response_metadata": {},
-            "type": "human",
-            "name": null,
-            "id": null,
-            "example": false
-        },
-        {
-            "content": "ご依頼ありがとうございます。「Transformersの論文を探しています」とのこと、承知しました。いくつか確認させてください — 以下の項目は検索条件を明確にし、最適な調査を行うための質問です。\n\n<form>\n  <label for=\"topic\">1. 調査分野：</label>\n  <input id=\"topic\" type=\"text\" value=\"Transformers\" disabled />\n  <br/>\n  <label for=\"purpose\">2. 調査の目的（必須）：</label>\n  <input id=\"purpose\" type=\"text\" placeholder=\"例：論文執筆のための文献整理、実装参考、授業用スライド作成など\" />\n  <br/>\n  <label for=\"timeframe\">3. 期間指定：</label>\n  <input id=\"timeframe\" type=\"text\" placeholder=\"例：2017年〜現在、過去5年、特定の年(例:2020-2024)\" />\n  <br/>\n  <label for=\"specific_subtopic\">4. 関心のあるサブトピック：</label>\n  <input id=\"specific_subtopic\" type=\"text\" placeholder=\"例：原論文、BERT/GPT、ViT、Efficient Transformer など\" />\n  <br/>\n  <label for=\"language\">5. 言語：</label>\n  <input id=\"language\" type=\"text\" placeholder=\"例：英語、日本語、両方\" />\n  <br/>\n  <label for=\"num_results\">6. 希望件数／深さ：</label>\n  <input id=\"num_results\" type=\"text\" placeholder=\"例：代表論文1本、主要5本、レビュー10本、詳細レビューなど\" />\n  <br/>\n  <label for=\"preferred_sources\">7. 優先ソース：</label>\n  <input id=\"preferred_sources\" type=\"text\" placeholder=\"例：arXiv、ICLR、NeurIPS、ACL、ジャーナル\" />\n  <br/>\n  <label for=\"format\">8. 出力形式：</label>\n  <input id=\"format\" type=\"text\" placeholder=\"例：PDFリンク一覧、BibTeX、短い要約(各1–3文)、詳細レビュー\" />\n  <br/>\n  <label for=\"known_papers\">9. 既知の論文（含める/除外するもの）：</label>\n  <input id=\"known_papers\" type=\"text\" placeholder=\"例：Vaswani et al. 2017（含める／除外する）\" />\n  <br/>\n  <label for=\"use_case\">10. 利用目的と期限：</label>\n  <input id=\"use_case\" type=\"text\" placeholder=\"例：論文執筆（期限: 2025-10-20）、社内報告など\" />\n  <br/>\n</form>\n\n上記のうち優先度の高い質問は特に（目的、期間、サブトピック）です。回答に基づき、最適な検索クエリと調査方針（対象データベース、キーワード群、検索期間、出力形式）を作成します。\n\nこれらの情報があるとより効果的に検索できますが、現時点で与えられている情報のみでそのまま検索することも可能です。",
-            "additional_kwargs": {},
-            "response_metadata": {},
-            "type": "ai",
-            "name": null,
-            "id": null,
-            "example": false,
-            "tool_calls": [],
-            "invalid_tool_calls": [],
-            "usage_metadata": null
-        },
-        {
-            "content": "そのままの条件で検索し、調査してください。",
-            "additional_kwargs": {},
-            "response_metadata": {},
-            "type": "human",
-            "name": null,
-            "id": null,
-            "example": false
-        }
-    ]
+    "is_completed": false
 }

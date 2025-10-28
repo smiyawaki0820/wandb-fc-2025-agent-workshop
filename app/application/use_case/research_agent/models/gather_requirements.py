@@ -60,10 +60,6 @@ class GatherRequirements(BaseModel):
         ),
         default=None
     )
-    response_to_user: str = Field(
-        title="ユーザーへの応答文",
-        description="会話履歴を参照し、ユーザーに提示する応答文を生成する",
-    )
 
     @computed_field
     @property
@@ -90,10 +86,16 @@ class GatherRequirements(BaseModel):
             )
         )
 
-    def update_inquiry_items(self, previous_inquiry_items: list[ManagedInquiryItem]) -> list[ManagedInquiryItem]:
+    def update_inquiry_items(
+        self,
+        previous_inquiry_items: list[ManagedInquiryItem],
+    ) -> list[ManagedInquiryItem]:
         updated_inquiry_items = deepcopy(previous_inquiry_items)
         for idx, item in enumerate(previous_inquiry_items):
-            updated_item = next((e for e in self.inquiry_items_evaluation if e.id == item.id), None)
+            updated_item = next(
+                (e for e in self.inquiry_items_evaluation if e.id == item.id),
+                None,
+            )
             if updated_item:
                 updated_inquiry_items[idx].status = updated_item.status
                 updated_inquiry_items[idx].answer = updated_item.answer
