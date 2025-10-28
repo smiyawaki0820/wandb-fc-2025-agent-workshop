@@ -28,10 +28,10 @@ class GatherRequirementsNode(BaseOpenAIChain):
 
     def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
         gather_requirements = self.run(state.messages, state.inquiry_items)
+        # 既存の要件収集項目のステータスを更新
         state.inquiry_items = gather_requirements.update_inquiry_items(state.inquiry_items)
+        # 新しい要件収集項目を追加
         state.inquiry_items += gather_requirements.inquiry_items
-        if not gather_requirements.is_completed:
-            state.messages.append(AIMessage(content=gather_requirements.response_to_user))
         return Command(
             goto=(
                 NextNode.BUILD_RESEARCH_PLAN.value if gather_requirements.is_completed else
@@ -47,12 +47,10 @@ class GatherRequirementsNode(BaseOpenAIChain):
         verbose: bool = False,
     ) -> GatherRequirements:
         chain = self._build_structured_chain(GatherRequirements)
-        # params = self.blob_manager.read_blob_as_json("storage/prompts/params/gather_requirements.json")
         inputs = {
             "conversation_history": messages,
             "managed_inquiry_items": managed_inquiry_items,
             "output_format": GatherRequirements.model_json_schema(),
-            # **params,
         }
         return self.invoke(chain, inputs, verbose)
 

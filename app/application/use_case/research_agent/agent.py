@@ -1,22 +1,24 @@
-from functools import partial
+from copy import deepcopy
 
 from langgraph.checkpoint.memory import InMemorySaver, MemorySaver
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
+from loguru import logger
 
 from application.use_case.research_agent.models.state import (
     ResearchAgentState,
     ResearchAgentInputState,
     ResearchAgentOutputState,
 )
-from application.use_case.execute_task_agent.agent import ExecuteTaskAgent
-from application.use_case.execute_task_agent.models import ExecuteTaskAgentInputState
+# from application.use_case.execute_task_agent.agent import ExecuteTaskAgent
+# from application.use_case.execute_task_agent.models import ExecuteTaskAgentInputState
 from application.use_case.research_agent.nodes import (
     FeedbackRequirementsNode,
     GatherRequirementsNode,
     BuildResearchPlanNode,
     EvaluateTaskNode,
+    ExecuteTaskNode,
     GenerateReportNode,
 )
 from domain.enums import BaseEnum, ManagedTaskStatus
@@ -35,7 +37,7 @@ class NodeNames(BaseEnum):
     FEEDBACK_REQUIREMENTS = "FeedbackRequirementsNode"
     GATHER_REQUIREMENTS = "GatherRequirementsNode"
     BUILD_RESEARCH_PLAN = "BuildResearchPlanNode"
-    EXECUTE_TASK_AGENT = "ExecuteTaskAgentNode"
+    EXECUTE_TASK = "ExecuteTaskNode"
     EVALUATE_TASK = "EvaluateTaskNode"
     GENERATE_REPORT = "GenerateReportNode"
 
@@ -44,8 +46,6 @@ class ResearchAgent(LangGraphAgent):
     def __init__(
         self,
         blob_manager: BaseBlobManager,
-        search_client: BaseContentSearchClient,
-        jina_client: JinaClient,
         checkpointer: MemorySaver | None = None,
         log_level: LogLevel = LogLevel.INFO,
         recursion_limit: int = 1000,
@@ -63,13 +63,11 @@ class ResearchAgent(LangGraphAgent):
             log_level=log_level,
             prompt_path="storage/prompts/research_agent/nodes/build_research_plan.jinja",
         )
-        self.execute_task_agent = ExecuteTaskAgent(
+        self.execute_task_node = ExecuteTaskNode(
+            model_name=OpenAIModelName.GPT_5_NANO,
             blob_manager=blob_manager,
-            search_client=search_client,
-            jina_client=jina_client,
-            checkpointer=checkpointer,
             log_level=log_level,
-            recursion_limit=recursion_limit,
+            prompt_path="storage/prompts/research_agent/nodes/execute_task.jinja",
         )
         self.evaluate_task_node = EvaluateTaskNode(
             model_name=OpenAIModelName.GPT_5_NANO,
@@ -92,39 +90,26 @@ class ResearchAgent(LangGraphAgent):
     def _create_graph(self) -> CompiledStateGraph:
         workflow = StateGraph(
             state_schema=ResearchAgentState,
-            input=ResearchAgentInputState,
-            output=ResearchAgentOutputState,
+            input_schema=ResearchAgentInputState,
+            output_schema=ResearchAgentOutputState,
         )
         workflow.add_node(NodeNames.GATHER_REQUIREMENTS.value, self.gather_requirements_node)
         workflow.add_node(NodeNames.FEEDBACK_REQUIREMENTS.value, self.feedback_requirements_node)
         workflow.add_node(NodeNames.BUILD_RESEARCH_PLAN.value, self.build_research_plan_node)
-        workflow.add_node(NodeNames.EXECUTE_TASK_AGENT.value, self._execute_task)
-        workflow.add_node(NodeNames.EVALUATE_TASK.value, self.evaluate_task_node)
+        workflow.add_node(NodeNames.EXECUTE_TASK.value, self.execute_task_node)
+        # workflow.add_node(NodeNames.EVALUATE_TASK.value, self.evaluate_task_node)
         workflow.add_node(NodeNames.GENERATE_REPORT.value, self.generate_report_node)
-        workflow.add_edge(NodeNames.EVALUATE_TASK.value, NodeNames.GENERATE_REPORT.value)
+        # workflow.add_edge(NodeNames.EVALUATE_TASK.value, NodeNames.GENERATE_REPORT.value)
         workflow.set_entry_point(NodeNames.GATHER_REQUIREMENTS.value)
         workflow.set_finish_point(NodeNames.GENERATE_REPORT.value)
         return workflow.compile(checkpointer=self.checkpointer)
-
-    def _execute_task(self, state: ExecuteTaskAgentInputState) -> dict[str, list[ManagedDocument]]:
-        input_state = ExecuteTaskAgentInputState(goal=state.goal, task=state.task)
-        output = self.execute_task_agent.graph.invoke(
-            input_state,
-            config={"recursion_limit": self.recursion_limit, "thread_id": "subtask"},
-        )
-        return {"managed_documents": output.get("managed_documents") or []}
 
 
 def create_graph() -> CompiledStateGraph:
     checkpointer = InMemorySaver()
     blob_manager = LocalBlobManager()
-    search_client = ArxivSearchClient(blob_manager)
-    # search_client = PerplexitySearchClient(blob_manager)
-    jina_client = JinaClient()
     agent = ResearchAgent(
         blob_manager=blob_manager,
-        search_client=search_client,
-        jina_client=jina_client,
         checkpointer=checkpointer,
         log_level=LogLevel.DEBUG,
         recursion_limit=1000,
@@ -145,21 +130,26 @@ def invoke_graph(
         if interrupt_data := getattr(interrupt, "value", None):
             match interrupt_data.get("node"):
                 case NodeNames.FEEDBACK_REQUIREMENTS.value:
-                    answers = []
                     # 全ての質問に回答を求める場合
-                    for inquiry_item in interrupt_data.get("inquiry_items", []):
+                    inquiry_items = deepcopy(interrupt_data.get("inquiry_items", []))
+                    for idx, inquiry_item in enumerate(inquiry_items):
                         if inquiry_item.status in [ManagedTaskStatus.NOT_STARTED]:
                             question = inquiry_item.question
                             user_input = str(input(f"{question} > "))
-                            answers.append(f"{question}: {user_input or 'NO ANSWER NEEDED'}")
+                            inquiry_items[idx].answer = user_input or "NO ANSWER NEEDED"
+                            inquiry_items[idx].status = ManagedTaskStatus.COMPLETED
                     return invoke_graph(
                         graph=graph,
-                        input_data=Command(resume="\n".join(answers)),
+                        input_data=Command(resume={
+                            item.id: item
+                            for item in inquiry_items
+                        }),
                         config=config,
                     )
                 case _:
                     error_message = f"Unknown node: {interrupt_data.get('node')}"
                     raise ValueError(error_message)
+
     return result
 
 
@@ -169,14 +159,18 @@ if __name__ == "__main__":
     blob_manager = LocalBlobManager()
     graph = create_graph()
 
-    initial_message = str(input("調査したい内容を入力してください: "))
+    initial_message = "今後5年10年でAIの市場はどのように変化していくと考えられますか？またAIエージェントの登場によりBPOが注目されるようになっていますが、今後注目される領域やビジネスモデルはどのようなものがあると考えられますか？"
+    # initial_message = str(input("調査したい内容を入力してください: "))
     messages = [
         HumanMessage(content=initial_message),
     ]
 
-    result = invoke_graph(
+    result: ResearchAgentOutputState = invoke_graph(
         graph=graph,
         input_data=ResearchAgentState(messages=messages),
         config={"recursion_limit": 1000, "thread_id": "default"},
     )
-    print(result)
+
+    output_file = "storage/outputs/research_report.md"
+    blob_manager.save_blob_as_str(result["research_report"], output_file)
+    logger.success(f"Research report saved to {output_file}")

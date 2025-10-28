@@ -10,9 +10,7 @@ dependencies = [
     "ipdb>=0.13.13",
     "jinja2>=3.1.6",
     "jsonschema>=4.25.1",
-    "langchain>=0.3.27",
-    "langchain-community>=0.3.30",
-    "langchain-openai>=0.3.33",
+    "langchain>=1.0.0",
     "langgraph>=0.3.11",
     "langgraph-cli[inmem]>=0.4.2",
     "loguru>=0.7.3",
@@ -101,6 +99,7 @@ ignore = [
     "PLR2004",  # magic value used in comparison
     "PTH123",   # ignore path operation rule
     "RUF001",   # allow unicode string normalization issues
+    "RUF002",   # allow ambiguous unicode character names
     "RUF003",   # allow ambiguous unicode character usage
 ]
 unfixable = [
