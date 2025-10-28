@@ -1,12 +1,14 @@
-
 from langgraph.graph import END
 from langgraph.types import Command
 
 from application.use_case.research_agent.models import (
     ResearchAgentState,
 )
-from application.use_case.research_agent.models.build_research_plan import ReportSection, ManagedTask
-from core.logging import LogLevel, log
+from application.use_case.research_agent.models.build_research_plan import (
+    ReportSection,
+    ManagedTask,
+)
+from core.logging import LogLevel
 from domain.enums import BaseEnum
 from infrastructure.blob_manager.base import BaseBlobManager
 from infrastructure.llm_chain.openai_chain import BaseOpenAIChain

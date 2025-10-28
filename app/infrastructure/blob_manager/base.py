@@ -8,10 +8,7 @@ from core.logging import log, LogLevel
 
 
 class BaseBlobManager(ABC):
-    def __init__(
-        self,
-        log_level: LogLevel = LogLevel.DEBUG
-    ) -> None:
+    def __init__(self, log_level: LogLevel = LogLevel.DEBUG) -> None:
         self.log = partial(log, log_level=log_level, subject=self.__name__)
 
     @property

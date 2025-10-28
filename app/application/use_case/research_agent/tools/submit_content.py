@@ -20,6 +20,7 @@ class EvaluationStatus(BaseEnum):
     IMPROVABLE = "improvable"
     REJECTED = "rejected"
 
+
 class Submission(BaseModel):
     status: EvaluationStatus = Field(
         title="提出物の評価結果",
@@ -30,7 +31,7 @@ class Submission(BaseModel):
             "3. 'rejected'（終了）: 主な要件が満たされておらず今回は受理不可。"
             "このいずれかを厳密に記入してください。"
         ),
-        examples=["accepted", "improvable", "rejected"]
+        examples=["accepted", "improvable", "rejected"],
     )
     reason: str = Field(
         title="受け入れ判断の詳細理由",
@@ -38,7 +39,7 @@ class Submission(BaseModel):
             "提出物が受け入れられなかった場合は、どこが要件や期待に達していなかったのか、具体的な改善ポイントやアドバイスを丁寧に記述してください。"
             "逆に、受理された場合は、どの点が要件を満たしていたのか、なぜ十分だったのかについて積極的なフィードバックや称賛を含めて説明してください。"
         ),
-        exclude=True
+        exclude=True,
     )
 
     @computed_field
@@ -48,6 +49,7 @@ class Submission(BaseModel):
 
 
 blob_manager = LocalBlobManager(log_level=LogLevel.TRACE)
+
 
 @tool
 def submit_content(content: str) -> dict[str, str | bool | None]:
@@ -80,8 +82,8 @@ def submit_content(content: str) -> dict[str, str | bool | None]:
             {"role": "user", "content": content},
         ],
         text_format=Submission,
-        reasoning={ "effort": "low" },
-        text={ "verbosity": "low" },
+        reasoning={"effort": "low"},
+        text={"verbosity": "low"},
     )
     submission: Submission = cast("Submission", result.output_parsed)
     return submission.model_dump()

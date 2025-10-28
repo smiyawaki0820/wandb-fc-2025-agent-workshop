@@ -24,16 +24,16 @@ def search_web(search_view: str) -> str:
     """  # noqa: E501
     client = Perplexity()
     search_create_response: SearchCreateResponse = client.search.create(
-        query=search_view,
-        max_results=3,
-        max_tokens_per_page=512
+        query=search_view, max_results=3, max_tokens_per_page=512
     )
-    return json.dumps([
-        {
-            "title": result.title,
-            "url": result.url,
-            "snippet": result.snippet,
-        }
-        for result in search_create_response.results
-    ], ensure_ascii=False)
-
+    return json.dumps(
+        [
+            {
+                "title": result.title,
+                "url": result.url,
+                "snippet": result.snippet,
+            }
+            for result in search_create_response.results
+        ],
+        ensure_ascii=False,
+    )

@@ -36,7 +36,4 @@ def handle_tool_errors(
         return tool_response
     except Exception as e:  # noqa: BLE001
         error_message = f"Tool error: Please check your input and try again. ({e!s})"
-        return ToolMessage(
-            content=error_message,
-            tool_call_id=request.tool_call["id"]
-        )
+        return ToolMessage(content=error_message, tool_call_id=request.tool_call["id"])

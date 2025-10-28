@@ -40,6 +40,7 @@ class AdditionalQuestion(BaseModel):
         default=None,
     )
 
+
 class GatherRequirements(BaseModel):
     inquiry_items_evaluation: list[ManagedItem] = Field(
         title="既存のInquiryItemに対するステータス評価",
@@ -58,7 +59,7 @@ class GatherRequirements(BaseModel):
             "この値が True の場合、ユーザーからの情報収集を強制的にスキップします。"
             "ユーザから「そのままの条件で検索し、調査してください。」「/skip」「これ以上の要件収集は不要です」といった回答を得た場合に True としてください。"
         ),
-        default=None
+        default=None,
     )
 
     @computed_field
@@ -78,12 +79,9 @@ class GatherRequirements(BaseModel):
     @computed_field
     @property
     def is_completed(self) -> bool:
-        return (
-            self.skip_gather_requirements or
-            all(
-                item.status in (ManagedTaskStatus.COMPLETED, ManagedTaskStatus.PENDING)
-                for item in self.inquiry_items
-            )
+        return self.skip_gather_requirements or all(
+            item.status in (ManagedTaskStatus.COMPLETED, ManagedTaskStatus.PENDING)
+            for item in self.inquiry_items
         )
 
     def update_inquiry_items(

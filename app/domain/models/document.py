@@ -19,14 +19,15 @@ class Document(BaseModel):
     <title>{self.title}</title>
     <link>{self.url}</link>
     <abstract>{self.abstract}</abstract>
-    <authors>{', '.join(self.authors)}</authors>
+    <authors>{", ".join(self.authors)}</authors>
 </document>"""
-
 
 
 class ManagedDocument(Document):
     task_id: NanoID = Field(title="タスクID")
-    status: ManagedTaskStatus = Field(title="文書状況", default=ManagedTaskStatus.NOT_STARTED)
+    status: ManagedTaskStatus = Field(
+        title="文書状況", default=ManagedTaskStatus.NOT_STARTED
+    )
     summary: str | None = Field(
         title="タスク解決のための詳細要約",
         description=(
@@ -48,6 +49,6 @@ class ManagedDocument(Document):
     <title>{self.title}</title>
     <link>{self.url}</link>
     <abstract>{self.abstract}</abstract>
-    <authors>{', '.join(self.authors)}</authors>
+    <authors>{", ".join(self.authors)}</authors>
     <summary>{self.summary}</summary>
 </document>"""

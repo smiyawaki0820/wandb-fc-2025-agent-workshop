@@ -49,7 +49,9 @@ class BaseOpenAIChain(BaseChain):
 
     @property
     def global_instruction(self) -> str:
-        template = self.blob_manager.read_blob_as_template(settings.GLOBAL_INSTRUCTION_PATH)
+        template = self.blob_manager.read_blob_as_template(
+            settings.GLOBAL_INSTRUCTION_PATH
+        )
         return template.render(current_date=get_current_time())
 
     def invoke(

@@ -9,4 +9,4 @@ class Priority(BaseEnum):
     @classmethod
     def up_to(cls, target: "Priority") -> list["Priority"]:
         priorities = [cls.HIGH, cls.MEDIUM, cls.LOW]
-        return priorities[:priorities.index(target) + 1]
+        return priorities[: priorities.index(target) + 1]

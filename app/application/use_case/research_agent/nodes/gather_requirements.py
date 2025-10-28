@@ -2,7 +2,9 @@ from langchain_core.messages import BaseMessage, AIMessage
 from langgraph.types import Command
 
 from application.use_case.research_agent.models import (
-    GatherRequirements, ManagedInquiryItem, ResearchAgentState,
+    GatherRequirements,
+    ManagedInquiryItem,
+    ResearchAgentState,
 )
 from core.logging import LogLevel
 from domain.enums import BaseEnum, ManagedTaskStatus
@@ -29,13 +31,16 @@ class GatherRequirementsNode(BaseOpenAIChain):
     def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
         gather_requirements = self.run(state.messages, state.inquiry_items)
         # 既存の要件収集項目のステータスを更新
-        state.inquiry_items = gather_requirements.update_inquiry_items(state.inquiry_items)
+        state.inquiry_items = gather_requirements.update_inquiry_items(
+            state.inquiry_items
+        )
         # 新しい要件収集項目を追加
         state.inquiry_items += gather_requirements.inquiry_items
         return Command(
             goto=(
-                NextNode.BUILD_RESEARCH_PLAN.value if gather_requirements.is_completed else
-                NextNode.FEEDBACK_REQUIREMENTS.value
+                NextNode.BUILD_RESEARCH_PLAN.value
+                if gather_requirements.is_completed
+                else NextNode.FEEDBACK_REQUIREMENTS.value
             ),
             update=state,
         )
@@ -55,7 +60,6 @@ class GatherRequirementsNode(BaseOpenAIChain):
         return self.invoke(chain, inputs, verbose)
 
 
-
 if __name__ == "__main__":
     from langchain_core.messages import HumanMessage, AIMessage
     from core.utils.nano_id import generate_id
@@ -66,7 +70,9 @@ if __name__ == "__main__":
 
     sample_message = [
         HumanMessage(content="Transformersの論文を探しています。"),
-        AIMessage(content="どのような分野や用途でTransformersの論文をお探しですか？（例：自然言語処理、画像認識、医療データ分析など）"),
+        AIMessage(
+            content="どのような分野や用途でTransformersの論文をお探しですか？（例：自然言語処理、画像認識、医療データ分析など）"
+        ),
         HumanMessage(content="医療データの解析に活用したいと考えています。"),
     ]
     state_inquiry_items = [

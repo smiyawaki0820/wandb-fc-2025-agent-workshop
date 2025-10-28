@@ -5,7 +5,10 @@ from pydantic import BaseModel, Field
 from langchain_core.messages import AnyMessage
 
 from application.use_case.research_agent.models import ManagedInquiryItem
-from application.use_case.research_agent.models.build_research_plan import ManagedTask, ReportSection
+from application.use_case.research_agent.models.build_research_plan import (
+    ManagedTask,
+    ReportSection,
+)
 from domain.models import ManagedDocument
 
 
@@ -17,9 +20,13 @@ class ResearchAgentPrivateState(BaseModel):
     inquiry_items: list[ManagedInquiryItem] = Field(default_factory=list)
     goal: str = Field(title="goal", default="")
     tasks: list[ManagedTask] = Field(default_factory=list)
-    executed_tasks: Annotated[list[ManagedTask], operator.add] = Field(default_factory=list)
+    executed_tasks: Annotated[list[ManagedTask], operator.add] = Field(
+        default_factory=list
+    )
     storyline: list[ReportSection] = Field(default_factory=list)
-    managed_documents: Annotated[list[ManagedDocument], operator.add] = Field(default_factory=list)
+    managed_documents: Annotated[list[ManagedDocument], operator.add] = Field(
+        default_factory=list
+    )
     retry_count: int = Field(default=0)
 
 
