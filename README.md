@@ -68,28 +68,6 @@ uv run langgraph dev --no-reload
 uv run python app/application/use_case/research_agent/agent.py
 ```
 
-#### タスク実行エージェント
-
-```bash
-uv run python app/application/use_case/execute_task_agent/agent.py
-```
-
-## 🔧 開発ツール
-
-```bash
-# コードフォーマット
-uv run ruff format
-
-# リント
-uv run ruff check
-
-# 型チェック
-uv run mypy app
-
-# テスト実行
-uv run pytest
-```
-
 ## 📖 主要機能
 
 ### ResearchAgent
