@@ -1,4 +1,3 @@
-from typing import Any
 from pydantic import BaseModel, Field, computed_field
 
 from core.utils.datetime_utils import get_current_time
@@ -129,16 +128,16 @@ class ResearchPlan(BaseModel):
     @computed_field
     @property
     def managed_tasks(self) -> list[ManagedTask]:
-        return [
-            ManagedTask.from_task(task) for task in self.tasks
-        ]
+        return [ManagedTask.from_task(task) for task in self.tasks]
 
     @computed_field
     @property
     def is_completed(self) -> bool:
         return all(
-            managed_task.status in [
+            managed_task.status
+            in [
                 ManagedTaskStatus.COMPLETED,
                 ManagedTaskStatus.PENDING,
-            ] for managed_task in self.managed_tasks
+            ]
+            for managed_task in self.managed_tasks
         )

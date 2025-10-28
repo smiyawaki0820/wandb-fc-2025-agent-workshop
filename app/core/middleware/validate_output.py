@@ -1,4 +1,3 @@
-
 from langchain.agents.middleware import after_model
 from langchain.agents.middleware import AgentState
 from langchain.messages import AIMessage
@@ -14,5 +13,3 @@ def validate_output(state: AgentState, runtime: Runtime) -> None:  # noqa: ARG00
             logger.info(f"AI response: {response}")
         elif getattr(last_message, "tool_calls", []):
             pass
-        else:
-            import ipdb; ipdb.set_trace()

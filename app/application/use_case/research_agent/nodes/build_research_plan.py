@@ -2,7 +2,10 @@ from langchain_core.messages import BaseMessage
 from langgraph.types import Command, Send
 
 from application.use_case.research_agent.models import (
-    ResearchAgentState, ResearchPlan, ManagedInquiryItem, ExecuteTaskState,
+    ResearchAgentState,
+    ResearchPlan,
+    ManagedInquiryItem,
+    ExecuteTaskState,
 )
 from core.logging import LogLevel
 from domain.enums import BaseEnum, Priority
@@ -58,11 +61,11 @@ class BuildResearchPlanNode(BaseOpenAIChain):
         }
         research_plan = self.invoke(chain, inputs, verbose)
         research_plan.tasks = [
-            task for task in research_plan.tasks
+            task
+            for task in research_plan.tasks
             if task.priority in Priority.up_to(self.target_priority)
         ]
         return research_plan
-
 
 
 if __name__ == "__main__":
@@ -86,5 +89,7 @@ if __name__ == "__main__":
             status=ManagedTaskStatus.PENDING,
         ),
     ]
-    research_plan = decomposer.run(messages=messages, inquiry_items=inquiry_items, verbose=True)
+    research_plan = decomposer.run(
+        messages=messages, inquiry_items=inquiry_items, verbose=True
+    )
     print(research_plan.model_dump_json(indent=2))

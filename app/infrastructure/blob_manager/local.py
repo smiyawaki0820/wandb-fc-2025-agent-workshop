@@ -41,8 +41,8 @@ class LocalBlobManager(BaseBlobManager):
         self.log(object="read_blob_as_jsonl", message=blob_path)
         with open(blob_path, encoding="utf-8") as fi:
             if isinstance(schema, BaseModel):
-                return [schema.model_validate_json(line) for line in fi.readlines()]
-            return [json.loads(line) for line in fi.readlines()]
+                return [schema.model_validate_json(line) for line in fi]
+            return [json.loads(line) for line in fi]
 
     def save_blob_as_bytes(self, content: bytes, blob_path: str) -> None:
         self.log(object="save_blob_as_bytes", message=blob_path)

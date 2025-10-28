@@ -1,6 +1,9 @@
 from pydantic import BaseModel, Field
 
-from application.use_case.research_agent.models.build_research_plan import Task, ManagedTask
+from application.use_case.research_agent.models.build_research_plan import (
+    Task,
+    ManagedTask,
+)
 
 
 class ExecuteTaskState(BaseModel):

@@ -78,6 +78,7 @@ class ExecuteTaskNode(BaseChain):
         try:
             response_content = agent.invoke({})
             from loguru import logger
+
             logger.error(type(response_content))
             return ManagedTask(
                 id=managed_task.id,
@@ -92,7 +93,12 @@ class ExecuteTaskNode(BaseChain):
             )
         except Exception as e:
             error_message = f"Error executing task: {e!s}\n{traceback.format_exc()}"
-            log(LogLevel.ERROR, subject="ExecuteTaskNode", object="run", message=error_message)
+            log(
+                LogLevel.ERROR,
+                subject="ExecuteTaskNode",
+                object="run",
+                message=error_message,
+            )
             return ManagedTask(
                 id=managed_task.id,
                 status=TaskStatus.FAILED.value,

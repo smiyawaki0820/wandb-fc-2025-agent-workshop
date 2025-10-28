@@ -19,7 +19,9 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = Field(default="TRACE")
     TIMEZONE: str = Field(default="Asia/Tokyo")
-    GLOBAL_INSTRUCTION_PATH: str = Field(default="storage/prompts/global_instruction.jinja")
+    GLOBAL_INSTRUCTION_PATH: str = Field(
+        default="storage/prompts/global_instruction.jinja"
+    )
 
 
 settings = Settings()

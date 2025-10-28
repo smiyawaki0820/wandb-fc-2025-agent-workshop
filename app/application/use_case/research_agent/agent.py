@@ -11,26 +11,18 @@ from application.use_case.research_agent.models.state import (
     ResearchAgentInputState,
     ResearchAgentOutputState,
 )
-# from application.use_case.execute_task_agent.agent import ExecuteTaskAgent
-# from application.use_case.execute_task_agent.models import ExecuteTaskAgentInputState
 from application.use_case.research_agent.nodes import (
     FeedbackRequirementsNode,
     GatherRequirementsNode,
     BuildResearchPlanNode,
-    EvaluateTaskNode,
     ExecuteTaskNode,
     GenerateReportNode,
 )
 from domain.enums import BaseEnum, ManagedTaskStatus
-from domain.models import ManagedDocument
 from domain.base_agent import LangGraphAgent
-from core.logging import log, LogLevel
+from core.logging import LogLevel
 from infrastructure.blob_manager import BaseBlobManager, LocalBlobManager
 from infrastructure.llm_chain.enums import OpenAIModelName
-from infrastructure.content_search_client import (
-    BaseContentSearchClient, ArxivSearchClient, PerplexitySearchClient,
-)
-from infrastructure.api_client.jina_client import JinaClient
 
 
 class NodeNames(BaseEnum):
@@ -38,7 +30,6 @@ class NodeNames(BaseEnum):
     GATHER_REQUIREMENTS = "GatherRequirementsNode"
     BUILD_RESEARCH_PLAN = "BuildResearchPlanNode"
     EXECUTE_TASK = "ExecuteTaskNode"
-    EVALUATE_TASK = "EvaluateTaskNode"
     GENERATE_REPORT = "GenerateReportNode"
 
 
@@ -69,12 +60,6 @@ class ResearchAgent(LangGraphAgent):
             log_level=log_level,
             prompt_path="storage/prompts/research_agent/nodes/execute_task.jinja",
         )
-        self.evaluate_task_node = EvaluateTaskNode(
-            model_name=OpenAIModelName.GPT_5_NANO,
-            blob_manager=blob_manager,
-            log_level=log_level,
-            prompt_path="storage/prompts/research_agent/nodes/evaluate_task.jinja",
-        )
         self.generate_report_node = GenerateReportNode(
             model_name=OpenAIModelName.GPT_5_NANO,
             blob_manager=blob_manager,
@@ -93,13 +78,17 @@ class ResearchAgent(LangGraphAgent):
             input_schema=ResearchAgentInputState,
             output_schema=ResearchAgentOutputState,
         )
-        workflow.add_node(NodeNames.GATHER_REQUIREMENTS.value, self.gather_requirements_node)
-        workflow.add_node(NodeNames.FEEDBACK_REQUIREMENTS.value, self.feedback_requirements_node)
-        workflow.add_node(NodeNames.BUILD_RESEARCH_PLAN.value, self.build_research_plan_node)
+        workflow.add_node(
+            NodeNames.GATHER_REQUIREMENTS.value, self.gather_requirements_node
+        )
+        workflow.add_node(
+            NodeNames.FEEDBACK_REQUIREMENTS.value, self.feedback_requirements_node
+        )
+        workflow.add_node(
+            NodeNames.BUILD_RESEARCH_PLAN.value, self.build_research_plan_node
+        )
         workflow.add_node(NodeNames.EXECUTE_TASK.value, self.execute_task_node)
-        # workflow.add_node(NodeNames.EVALUATE_TASK.value, self.evaluate_task_node)
         workflow.add_node(NodeNames.GENERATE_REPORT.value, self.generate_report_node)
-        # workflow.add_edge(NodeNames.EVALUATE_TASK.value, NodeNames.GENERATE_REPORT.value)
         workflow.set_entry_point(NodeNames.GATHER_REQUIREMENTS.value)
         workflow.set_finish_point(NodeNames.GENERATE_REPORT.value)
         return workflow.compile(checkpointer=self.checkpointer)
@@ -140,10 +129,9 @@ def invoke_graph(
                             inquiry_items[idx].status = ManagedTaskStatus.COMPLETED
                     return invoke_graph(
                         graph=graph,
-                        input_data=Command(resume={
-                            item.id: item
-                            for item in inquiry_items
-                        }),
+                        input_data=Command(
+                            resume={item.id: item for item in inquiry_items}
+                        ),
                         config=config,
                     )
                 case _:
