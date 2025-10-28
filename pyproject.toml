@@ -5,7 +5,6 @@ description = "W&B Fully Connected Tokyo 2025 - 現場で活用するためのAI
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "cohere>=5.18.0",
     "feedparser>=6.0.12",
     "ipdb>=0.13.13",
     "jinja2>=3.1.6",
