@@ -6,12 +6,12 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
 from loguru import logger
 
-from application.use_case.research_agent.models.state import (
+from workflow.models.state import (
     ResearchAgentState,
     ResearchAgentInputState,
     ResearchAgentOutputState,
 )
-from application.use_case.research_agent.nodes import (
+from workflow.nodes import (
     FeedbackRequirementsNode,
     GatherRequirementsNode,
     BuildResearchPlanNode,
@@ -139,26 +139,3 @@ def invoke_graph(
                     raise ValueError(error_message)
 
     return result
-
-
-if __name__ == "__main__":
-    from langchain_core.messages import HumanMessage
-
-    blob_manager = LocalBlobManager()
-    graph = create_graph()
-
-    initial_message = "今後5年10年でAIの市場はどのように変化していくと考えられますか？またAIエージェントの登場によりBPOが注目されるようになっていますが、今後注目される領域やビジネスモデルはどのようなものがあると考えられますか？"
-    # initial_message = str(input("調査したい内容を入力してください: "))
-    messages = [
-        HumanMessage(content=initial_message),
-    ]
-
-    result: ResearchAgentOutputState = invoke_graph(
-        graph=graph,
-        input_data=ResearchAgentState(messages=messages),
-        config={"recursion_limit": 1000, "thread_id": "default"},
-    )
-
-    output_file = "storage/outputs/research_report.md"
-    blob_manager.save_blob_as_str(result["research_report"], output_file)
-    logger.success(f"Research report saved to {output_file}")

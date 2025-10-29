@@ -14,7 +14,7 @@
 
 ```
 app/
-├── application/        # アプリケーション層
+├── workflow/        # アプリケーション層
 │   └── use_case/
 │       └── research_agent/
 ├── core/              # コア機能
@@ -65,7 +65,7 @@ uv run langgraph dev --no-reload
 #### リサーチエージェント
 
 ```bash
-uv run python app/application/use_case/research_agent/agent.py
+uv run python app/exp/run_agent.py
 ```
 
 ## 📖 主要機能
@@ -93,7 +93,7 @@ uv run python app/application/use_case/research_agent/agent.py
 │   ├── outputs/        # 生成されたレポート
 │   └── fixtures/       # テスト用データ
 ├── app/
-│   ├── application/    # ユースケース実装
+│   ├── workflow/    # ユースケース実装
 │   ├── core/          # 共通機能
 │   ├── domain/        # ドメインロジック
 │   └── infrastructure/ # 外部サービス連携

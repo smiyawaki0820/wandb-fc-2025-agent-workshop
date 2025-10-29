@@ -4,16 +4,16 @@ from langchain.agents import create_agent
 from langgraph.types import Command
 from langchain_core.tools.structured import StructuredTool
 
-from application.use_case.research_agent.models import (
+from workflow.models import (
     ExecuteTaskState,
 )
-from application.use_case.research_agent.models.build_research_plan import TaskType
-from application.use_case.research_agent.tools import search_web, submit_content
+from workflow.models.build_research_plan import TaskType
+from workflow.tools import search_web, submit_content
 from domain.enums import TaskStatus
 from core.logging import LogLevel, log
 from core.middleware import handle_tool_errors, validate_output
 from domain.enums import BaseEnum
-from application.use_case.research_agent.models.build_research_plan import ManagedTask
+from workflow.models.build_research_plan import ManagedTask
 from infrastructure.llm_chain import BaseChain
 from infrastructure.llm_chain.enums import OpenAIModelName
 from infrastructure.blob_manager.base import BaseBlobManager
@@ -76,10 +76,8 @@ class ExecuteTaskNode(BaseChain):
             ],
         ).with_config({"recursion_limit": 50})
         try:
-            response_content = agent.invoke({})
-            from loguru import logger
-
-            logger.error(type(response_content))
+            response = agent.invoke({})
+            response_content = response["messages"][-1].content  # TODO
             return ManagedTask(
                 id=managed_task.id,
                 status=TaskStatus.COMPLETED.value,  # Use the value (str), not enum object

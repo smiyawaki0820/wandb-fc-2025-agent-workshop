@@ -1,10 +1,10 @@
 from langgraph.graph import END
 from langgraph.types import Command
 
-from application.use_case.research_agent.models import (
+from workflow.models import (
     ResearchAgentState,
 )
-from application.use_case.research_agent.models.build_research_plan import (
+from workflow.models.build_research_plan import (
     ReportSection,
     ManagedTask,
 )

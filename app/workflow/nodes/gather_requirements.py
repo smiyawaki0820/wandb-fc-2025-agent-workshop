@@ -1,7 +1,7 @@
 from langchain_core.messages import BaseMessage, AIMessage
 from langgraph.types import Command
 
-from application.use_case.research_agent.models import (
+from workflow.models import (
     GatherRequirements,
     ManagedInquiryItem,
     ResearchAgentState,
