@@ -2,8 +2,8 @@ import sys
 
 from loguru import logger
 
-from core.config import settings
-from domain.enums import BaseEnum
+from app.core.config import settings
+from app.domain.enums import BaseEnum
 
 
 class LogLevel(BaseEnum):

@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 
-from domain.enums import ManagedTaskStatus
-from core.utils.datetime_utils import get_current_time
-from core.utils.nano_id import NanoID, generate_id
+from app.domain.enums import ManagedTaskStatus
+from app.core.utils.datetime_utils import get_current_time
+from app.core.utils.nano_id import NanoID, generate_id
 
 
 class Document(BaseModel):

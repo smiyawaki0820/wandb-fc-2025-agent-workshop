@@ -2,8 +2,8 @@ from copy import deepcopy
 
 from pydantic import BaseModel, Field, computed_field
 
-from core.utils.nano_id import generate_id, NanoID
-from domain.enums import ManagedTaskStatus, Priority
+from app.core.utils.nano_id import generate_id, NanoID
+from app.domain.enums import ManagedTaskStatus, Priority
 
 
 class ManagedItem(BaseModel):

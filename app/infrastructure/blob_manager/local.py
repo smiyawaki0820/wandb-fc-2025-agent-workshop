@@ -4,8 +4,8 @@ from pathlib import Path
 from jinja2 import Template
 from pydantic import BaseModel
 
-from core.logging import LogLevel
-from infrastructure.blob_manager.base import BaseBlobManager
+from app.core.logging import LogLevel
+from app.infrastructure.blob_manager.base import BaseBlobManager
 
 
 class LocalBlobManager(BaseBlobManager):

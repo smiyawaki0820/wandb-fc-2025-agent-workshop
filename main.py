@@ -3,10 +3,10 @@ import argparse
 from langchain_core.messages import HumanMessage
 from loguru import logger
 
-from infrastructure.blob_manager.local import LocalBlobManager
-from workflow.agent import create_graph
-from workflow.models.state import ResearchAgentState, ResearchAgentOutputState
-from workflow.agent import invoke_graph
+from app.infrastructure.blob_manager.local import LocalBlobManager
+from app.workflow.agent import create_graph
+from app.workflow.models.state import ResearchAgentState, ResearchAgentOutputState
+from app.workflow.agent import invoke_graph
 
 
 def parse_args() -> argparse.Namespace:

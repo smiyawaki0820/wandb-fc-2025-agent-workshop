@@ -4,19 +4,19 @@ from langchain.agents import create_agent
 from langgraph.types import Command
 from langchain_core.tools.structured import StructuredTool
 
-from workflow.models import (
+from app.workflow.models import (
     ExecuteTaskState,
 )
-from workflow.models.build_research_plan import TaskType
-from workflow.tools import search_web, submit_content
-from domain.enums import TaskStatus
-from core.logging import LogLevel, log
-from core.middleware import handle_tool_errors, validate_output
-from domain.enums import BaseEnum
-from workflow.models.build_research_plan import ManagedTask
-from infrastructure.llm_chain import BaseChain
-from infrastructure.llm_chain.enums import OpenAIModelName
-from infrastructure.blob_manager.base import BaseBlobManager
+from app.workflow.models.build_research_plan import TaskType
+from app.workflow.tools import search_web, submit_content
+from app.domain.enums import TaskStatus
+from app.core.logging import LogLevel, log
+from app.core.middleware import handle_tool_errors, validate_output
+from app.domain.enums import BaseEnum
+from app.workflow.models.build_research_plan import ManagedTask
+from app.infrastructure.llm_chain import BaseChain
+from app.infrastructure.llm_chain.enums import OpenAIModelName
+from app.infrastructure.blob_manager.base import BaseBlobManager
 
 
 class NextNode(BaseEnum):
