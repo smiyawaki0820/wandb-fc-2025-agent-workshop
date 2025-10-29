@@ -17,8 +17,6 @@ class Settings(BaseSettings):
     PERPLEXITY_API_KEY: str | None = Field(default=None)
 
     WANDB_PROJECT: str = Field(default="wandb-fc-2025-agent-workshop")
-    PYTHONPATH: str = Field(default="./:$PYTHONPATH")
-    LANGGRAPH_API_URL: str = Field(default="http://localhost:2024")
 
     LOG_LEVEL: str = Field(default="TRACE")
     TIMEZONE: str = Field(default="Asia/Tokyo")

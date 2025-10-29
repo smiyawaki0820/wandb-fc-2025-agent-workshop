@@ -1,3 +1,5 @@
+from typing import Literal
+
 from langchain_core.messages import BaseMessage, AIMessage
 from langgraph.types import Command
 
@@ -7,15 +9,12 @@ from app.workflow.models import (
     ResearchAgentState,
 )
 from app.core.logging import LogLevel
-from app.domain.enums import BaseEnum, ManagedTaskStatus
+from app.domain.enums import ManagedTaskStatus
 from app.infrastructure.blob_manager import BaseBlobManager
 from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
 from app.infrastructure.llm_chain.enums import OpenAIModelName
+from app.workflow.enums import Node
 
-
-class NextNode(BaseEnum):
-    FEEDBACK_REQUIREMENTS = "FeedbackRequirementsNode"
-    BUILD_RESEARCH_PLAN = "BuildResearchPlanNode"
 
 
 class GatherRequirementsNode(BaseOpenAIChain):
@@ -28,7 +27,10 @@ class GatherRequirementsNode(BaseOpenAIChain):
     ) -> None:
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
+    def __call__(
+        self,
+        state: ResearchAgentState
+    ) -> Command[Literal[Node.FEEDBACK_REQUIREMENTS.value, Node.BUILD_RESEARCH_PLAN.value]]:
         gather_requirements = self.run(state.messages, state.inquiry_items)
         # 既存の要件収集項目のステータスを更新
         state.inquiry_items = gather_requirements.update_inquiry_items(
@@ -38,9 +40,9 @@ class GatherRequirementsNode(BaseOpenAIChain):
         state.inquiry_items += gather_requirements.inquiry_items
         return Command(
             goto=(
-                NextNode.BUILD_RESEARCH_PLAN.value
+                Node.BUILD_RESEARCH_PLAN.value
                 if gather_requirements.is_completed
-                else NextNode.FEEDBACK_REQUIREMENTS.value
+                else Node.FEEDBACK_REQUIREMENTS.value
             ),
             update=state,
         )

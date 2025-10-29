@@ -1,14 +1,13 @@
+import json
+from typing import Literal
+
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import Command, interrupt
 
 from app.workflow.models import ResearchAgentState
 from app.core.logging import LogLevel
-from app.domain.enums import BaseEnum
 from app.infrastructure.llm_chain import BaseChain
-
-
-class NextNode(BaseEnum):
-    GATHER_REQUIREMENTS = "GatherRequirementsNode"
+from app.workflow.enums import Node
 
 
 class FeedbackRequirementsNode(BaseChain):
@@ -20,7 +19,7 @@ class FeedbackRequirementsNode(BaseChain):
         self.default_feedback = default_feedback
         super().__init__(log_level)
 
-    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
+    def __call__(self, state: ResearchAgentState) -> Command[Literal[Node.GATHER_REQUIREMENTS.value]]:
         self.log(object="feedback_requirements", message=f"state: {state}")
         feedback_items = (
             interrupt(
@@ -31,7 +30,6 @@ class FeedbackRequirementsNode(BaseChain):
             )
             or self.default_feedback
         )
-        # inquiry_items を更新
         for idx, previous_item in enumerate(state.inquiry_items):
             if current_item := feedback_items.get(previous_item.id):
                 state.inquiry_items[idx] = current_item
@@ -42,4 +40,4 @@ class FeedbackRequirementsNode(BaseChain):
                         HumanMessage(content=current_item.answer),
                     ]
                 )
-        return Command(goto=NextNode.GATHER_REQUIREMENTS.value, update=state)
+        return Command(goto=Node.GATHER_REQUIREMENTS.value, update=state)

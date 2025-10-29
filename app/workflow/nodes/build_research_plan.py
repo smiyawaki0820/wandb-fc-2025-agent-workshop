@@ -1,21 +1,20 @@
+from typing import Literal
+
 from langchain_core.messages import BaseMessage
 from langgraph.types import Command, Send
 
+from app.core.logging import LogLevel
+from app.domain.enums import Priority
+from app.infrastructure.blob_manager import BaseBlobManager
+from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
+from app.infrastructure.llm_chain.enums import OpenAIModelName
+from app.workflow.enums import Node
 from app.workflow.models import (
     ResearchAgentState,
     ResearchPlan,
     ManagedInquiryItem,
     ExecuteTaskState,
 )
-from app.core.logging import LogLevel
-from app.domain.enums import BaseEnum, Priority
-from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
-from app.infrastructure.llm_chain.enums import OpenAIModelName
-from app.infrastructure.blob_manager.base import BaseBlobManager
-
-
-class NextNode(BaseEnum):
-    EXECUTE_TASK = "ExecuteTaskNode"
 
 
 class BuildResearchPlanNode(BaseOpenAIChain):
@@ -30,7 +29,7 @@ class BuildResearchPlanNode(BaseOpenAIChain):
         self.target_priority = target_priority
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
+    def __call__(self, state: ResearchAgentState) -> Command[Literal[Node.EXECUTE_TASK.value]]:
         research_plan = self.run(
             messages=state.messages,
             inquiry_items=state.inquiry_items,
@@ -41,7 +40,7 @@ class BuildResearchPlanNode(BaseOpenAIChain):
         gotos = []
         for managed_task in state.tasks:
             goto = Send(
-                NextNode.EXECUTE_TASK.value,
+                Node.EXECUTE_TASK.value,
                 ExecuteTaskState(goal=state.goal, task=managed_task),
             )
             gotos.append(goto)
@@ -66,6 +65,7 @@ class BuildResearchPlanNode(BaseOpenAIChain):
             if task.priority in Priority.up_to(self.target_priority)
         ]
         return research_plan
+
 
 
 if __name__ == "__main__":

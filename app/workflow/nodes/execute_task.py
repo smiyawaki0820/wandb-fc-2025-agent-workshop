@@ -1,27 +1,24 @@
 import traceback
+from typing import Literal
 
 from langchain.agents import create_agent
 from langgraph.types import Command
 from langchain_core.tools.structured import StructuredTool
 
+from app.core.logging import LogLevel, log
+from app.core.middleware import handle_tool_errors, validate_output
+from app.domain.enums import TaskStatus
+from app.infrastructure.blob_manager import BaseBlobManager
+from app.infrastructure.llm_chain import BaseChain
+from app.infrastructure.llm_chain.enums import OpenAIModelName
+from app.workflow.enums import Node
+from app.workflow.models.build_research_plan import TaskType
+from app.workflow.tools import search_web, submit_content
+from app.workflow.models.build_research_plan import ManagedTask
 from app.workflow.models import (
     ExecuteTaskState,
 )
-from app.workflow.models.build_research_plan import TaskType
-from app.workflow.tools import search_web, submit_content
-from app.domain.enums import TaskStatus
-from app.core.logging import LogLevel, log
-from app.core.middleware import handle_tool_errors, validate_output
-from app.domain.enums import BaseEnum
-from app.workflow.models.build_research_plan import ManagedTask
-from app.infrastructure.llm_chain import BaseChain
-from app.infrastructure.llm_chain.enums import OpenAIModelName
-from app.infrastructure.blob_manager.base import BaseBlobManager
 
-
-class NextNode(BaseEnum):
-    EXECUTE_TASK = "ExecuteTaskNode"
-    GENERATE_REPORT = "GenerateReportNode"
 
 
 class ExecuteTaskNode(BaseChain):
@@ -43,10 +40,13 @@ class ExecuteTaskNode(BaseChain):
             TaskType.SEARCH: search_web,
         }
 
-    def __call__(self, state: ExecuteTaskState) -> Command[NextNode]:
+    def __call__(
+        self,
+        state: ExecuteTaskState
+    ) -> Command[Literal[Node.GENERATE_REPORT.value]]:
         managed_task_execution = self.run(state)
         return Command(
-            goto=NextNode.GENERATE_REPORT.value,
+            goto=Node.GENERATE_REPORT.value,
             update={
                 "executed_tasks": [managed_task_execution],
             },
@@ -89,7 +89,7 @@ class ExecuteTaskNode(BaseChain):
                 priority=managed_task.priority,
                 required_capabilities=managed_task.required_capabilities,
             )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             error_message = f"Error executing task: {e!s}\n{traceback.format_exc()}"
             log(
                 LogLevel.ERROR,

@@ -4,8 +4,13 @@ from langgraph.checkpoint.memory import InMemorySaver, MemorySaver
 from langgraph.graph import StateGraph
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
-from loguru import logger
 
+from app.domain.enums import ManagedTaskStatus
+from app.domain.base_agent import LangGraphAgent
+from app.core.logging import LogLevel
+from app.infrastructure.blob_manager import BaseBlobManager, LocalBlobManager
+from app.infrastructure.llm_chain.enums import OpenAIModelName
+from app.workflow.enums import Node
 from app.workflow.models.state import (
     ResearchAgentState,
     ResearchAgentInputState,
@@ -18,19 +23,7 @@ from app.workflow.nodes import (
     ExecuteTaskNode,
     GenerateReportNode,
 )
-from app.domain.enums import BaseEnum, ManagedTaskStatus
-from app.domain.base_agent import LangGraphAgent
-from app.core.logging import LogLevel
-from app.infrastructure.blob_manager import BaseBlobManager, LocalBlobManager
-from app.infrastructure.llm_chain.enums import OpenAIModelName
 
-
-class NodeNames(BaseEnum):
-    FEEDBACK_REQUIREMENTS = "FeedbackRequirementsNode"
-    GATHER_REQUIREMENTS = "GatherRequirementsNode"
-    BUILD_RESEARCH_PLAN = "BuildResearchPlanNode"
-    EXECUTE_TASK = "ExecuteTaskNode"
-    GENERATE_REPORT = "GenerateReportNode"
 
 
 class ResearchAgent(LangGraphAgent):
@@ -79,18 +72,18 @@ class ResearchAgent(LangGraphAgent):
             output_schema=ResearchAgentOutputState,
         )
         workflow.add_node(
-            NodeNames.GATHER_REQUIREMENTS.value, self.gather_requirements_node
+            Node.GATHER_REQUIREMENTS.value, self.gather_requirements_node
         )
         workflow.add_node(
-            NodeNames.FEEDBACK_REQUIREMENTS.value, self.feedback_requirements_node
+            Node.FEEDBACK_REQUIREMENTS.value, self.feedback_requirements_node
         )
         workflow.add_node(
-            NodeNames.BUILD_RESEARCH_PLAN.value, self.build_research_plan_node
+            Node.BUILD_RESEARCH_PLAN.value, self.build_research_plan_node
         )
-        workflow.add_node(NodeNames.EXECUTE_TASK.value, self.execute_task_node)
-        workflow.add_node(NodeNames.GENERATE_REPORT.value, self.generate_report_node)
-        workflow.set_entry_point(NodeNames.GATHER_REQUIREMENTS.value)
-        workflow.set_finish_point(NodeNames.GENERATE_REPORT.value)
+        workflow.add_node(Node.EXECUTE_TASK.value, self.execute_task_node)
+        workflow.add_node(Node.GENERATE_REPORT.value, self.generate_report_node)
+        workflow.set_entry_point(Node.GATHER_REQUIREMENTS.value)
+        workflow.set_finish_point(Node.GENERATE_REPORT.value)
         return workflow.compile(checkpointer=self.checkpointer)
 
 
@@ -118,7 +111,7 @@ def invoke_graph(
     for interrupt in result.get("__interrupt__", []):
         if interrupt_data := getattr(interrupt, "value", None):
             match interrupt_data.get("node"):
-                case NodeNames.FEEDBACK_REQUIREMENTS.value:
+                case Node.FEEDBACK_REQUIREMENTS.value:
                     # 全ての質問に回答を求める場合
                     inquiry_items = deepcopy(interrupt_data.get("inquiry_items", []))
                     for idx, inquiry_item in enumerate(inquiry_items):
