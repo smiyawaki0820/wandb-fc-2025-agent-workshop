@@ -1,4 +1,5 @@
 .langgraph_api/
+storage/outputs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
