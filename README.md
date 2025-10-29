@@ -54,15 +54,9 @@ bash scripts/create_env_file.sh
 
 ## 🚀 実行方法
 
-### クイックスタート（LangGraphサーバー）
+### リサーチエージェント
 
-```bash
-uv run langgraph dev --no-reload
-```
-
-### 個別実行
-
-#### リサーチエージェント
+<img src="https://i.gyazo.com/9f61d95d8166090900055a665bb44947.png" width="80%" />
 
 ```bash
 uv run python main.py

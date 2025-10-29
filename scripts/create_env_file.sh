@@ -159,23 +159,6 @@ WANDB_API_KEY=${WANDB_API_KEY}
 WANDB_PROJECT=${WANDB_PROJECT}
 LOG_LEVEL=${LOG_LEVEL}
 
-# =============================================================================
-# Development Settings
-# =============================================================================
-
-# Python Path
-PYTHONPATH=./:$PYTHONPATH
-
-# Development Mode
-DEVELOPMENT=true
-
-# =============================================================================
-# LangGraph Settings
-# =============================================================================
-
-# LangGraph Studio Configuration
-LANGGRAPH_API_URL=http://localhost:2024
-
 EOF
 
     # 権限設定
@@ -192,10 +175,6 @@ EOF
     echo
     log_warning "重要: .envファイルには機密情報が含まれています。"
     log_warning "      このファイルをGitリポジトリにコミットしないでください。"
-    echo
-    log_info "次のコマンドでアプリケーションを起動できます:"
-    echo "  uv sync"
-    echo "  uv run langgraph dev --no-reload"
 }
 
 # エラーハンドリング

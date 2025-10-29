@@ -40,6 +40,5 @@ def main() -> None:
     logger.success(f"Research report saved to {output_file}")
 
 
-
 if __name__ == "__main__":
     main()

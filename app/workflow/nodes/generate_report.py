@@ -1,3 +1,5 @@
+from typing import Literal
+
 from langgraph.graph import END
 from langgraph.types import Command
 
@@ -9,14 +11,9 @@ from app.workflow.models.build_research_plan import (
     ManagedTask,
 )
 from app.core.logging import LogLevel
-from app.domain.enums import BaseEnum
 from app.infrastructure.blob_manager.base import BaseBlobManager
 from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
 from app.infrastructure.llm_chain.enums import OpenAIModelName
-
-
-class NextNode(BaseEnum):
-    END = END
 
 
 class GenerateReportNode(BaseOpenAIChain):
@@ -29,14 +26,14 @@ class GenerateReportNode(BaseOpenAIChain):
     ) -> None:
         super().__init__(model_name, blob_manager, log_level, prompt_path)
 
-    def __call__(self, state: ResearchAgentState) -> Command[NextNode]:
+    def __call__(self, state: ResearchAgentState) -> Command[Literal[END]]:
         report = self.run(
             goal=state.goal,
             storyline=state.storyline,
             executed_tasks=state.executed_tasks,
         )
         state.research_report = report
-        return Command(goto=NextNode.END.value, update=state)
+        return Command(goto=END, update=state)
 
     def run(
         self,
