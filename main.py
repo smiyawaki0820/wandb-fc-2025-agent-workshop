@@ -2,7 +2,9 @@ import argparse
 
 from langchain_core.messages import HumanMessage
 from loguru import logger
+import weave
 
+from app.core.config import settings
 from app.infrastructure.blob_manager.local import LocalBlobManager
 from app.workflow.agent import create_graph
 from app.workflow.models.state import ResearchAgentState, ResearchAgentOutputState
@@ -21,6 +23,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    # weave.init(settings.WANDB_PROJECT)
+
     args = parse_args()
     blob_manager = LocalBlobManager()
     graph = create_graph()
