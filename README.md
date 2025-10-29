@@ -65,7 +65,7 @@ uv run langgraph dev --no-reload
 #### リサーチエージェント
 
 ```bash
-uv run python app/exp/run_agent.py
+uv run python main.py
 ```
 
 ## 📖 主要機能

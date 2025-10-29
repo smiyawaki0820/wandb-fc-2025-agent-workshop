@@ -4,7 +4,7 @@ from functools import partial
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
-from core.logging import LogLevel, log
+from app.core.logging import LogLevel, log
 
 
 class LangGraphAgent(ABC):

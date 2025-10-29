@@ -4,7 +4,7 @@ from functools import partial
 from langgraph.types import Command
 from pydantic import BaseModel
 
-from core.logging import log, LogLevel
+from app.core.logging import log, LogLevel
 
 
 class BaseChain(ABC):

@@ -1,17 +1,17 @@
 from langchain_core.messages import BaseMessage
 from langgraph.types import Command, Send
 
-from workflow.models import (
+from app.workflow.models import (
     ResearchAgentState,
     ResearchPlan,
     ManagedInquiryItem,
     ExecuteTaskState,
 )
-from core.logging import LogLevel
-from domain.enums import BaseEnum, Priority
-from infrastructure.llm_chain.openai_chain import BaseOpenAIChain
-from infrastructure.llm_chain.enums import OpenAIModelName
-from infrastructure.blob_manager.base import BaseBlobManager
+from app.core.logging import LogLevel
+from app.domain.enums import BaseEnum, Priority
+from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
+from app.infrastructure.llm_chain.enums import OpenAIModelName
+from app.infrastructure.blob_manager.base import BaseBlobManager
 
 
 class NextNode(BaseEnum):
@@ -70,10 +70,10 @@ class BuildResearchPlanNode(BaseOpenAIChain):
 
 if __name__ == "__main__":
     from langchain_core.messages import HumanMessage
-    from infrastructure.blob_manager.local import LocalBlobManager
-    from domain.enums import Priority, ManagedTaskStatus
-    from domain.models import ManagedInquiryItem
-    from core.utils.nano_id import generate_id
+    from app.infrastructure.blob_manager.local import LocalBlobManager
+    from app.domain.enums import Priority, ManagedTaskStatus
+    from app.domain.models import ManagedInquiryItem
+    from app.core.utils.nano_id import generate_id
 
     blob_manager = LocalBlobManager()
     decomposer = BuildResearchPlanNode(OpenAIModelName.GPT_5_NANO, blob_manager)

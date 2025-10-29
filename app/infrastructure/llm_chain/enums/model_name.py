@@ -1,4 +1,4 @@
-from domain.enums.base import BaseEnum
+from app.domain.enums.base import BaseEnum
 
 
 class OpenAIModelName(BaseEnum):

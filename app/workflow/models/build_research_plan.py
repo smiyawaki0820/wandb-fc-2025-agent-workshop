@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field, computed_field
 
-from core.utils.datetime_utils import get_current_time
-from core.utils.nano_id import NanoID, generate_id
-from domain.enums import BaseEnum, ManagedTaskStatus, Priority
+from app.core.utils.datetime_utils import get_current_time
+from app.core.utils.nano_id import NanoID, generate_id
+from app.domain.enums import BaseEnum, ManagedTaskStatus, Priority
 
 
 class TaskType(BaseEnum):

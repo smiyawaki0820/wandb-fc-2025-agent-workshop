@@ -1,10 +1,10 @@
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import Command, interrupt
 
-from workflow.models import ResearchAgentState
-from core.logging import LogLevel
-from domain.enums import BaseEnum
-from infrastructure.llm_chain import BaseChain
+from app.workflow.models import ResearchAgentState
+from app.core.logging import LogLevel
+from app.domain.enums import BaseEnum
+from app.infrastructure.llm_chain import BaseChain
 
 
 class NextNode(BaseEnum):

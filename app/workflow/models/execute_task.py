@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from workflow.models.build_research_plan import (
+from app.workflow.models.build_research_plan import (
     Task,
     ManagedTask,
 )

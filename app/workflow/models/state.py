@@ -4,12 +4,12 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 from langchain_core.messages import AnyMessage
 
-from workflow.models import ManagedInquiryItem
-from workflow.models.build_research_plan import (
+from app.workflow.models import ManagedInquiryItem
+from app.workflow.models.build_research_plan import (
     ManagedTask,
     ReportSection,
 )
-from domain.models import ManagedDocument
+from app.domain.models import ManagedDocument
 
 
 class ResearchAgentInputState(BaseModel):

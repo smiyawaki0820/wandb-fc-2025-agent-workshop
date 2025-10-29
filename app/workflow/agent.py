@@ -6,23 +6,23 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
 from loguru import logger
 
-from workflow.models.state import (
+from app.workflow.models.state import (
     ResearchAgentState,
     ResearchAgentInputState,
     ResearchAgentOutputState,
 )
-from workflow.nodes import (
+from app.workflow.nodes import (
     FeedbackRequirementsNode,
     GatherRequirementsNode,
     BuildResearchPlanNode,
     ExecuteTaskNode,
     GenerateReportNode,
 )
-from domain.enums import BaseEnum, ManagedTaskStatus
-from domain.base_agent import LangGraphAgent
-from core.logging import LogLevel
-from infrastructure.blob_manager import BaseBlobManager, LocalBlobManager
-from infrastructure.llm_chain.enums import OpenAIModelName
+from app.domain.enums import BaseEnum, ManagedTaskStatus
+from app.domain.base_agent import LangGraphAgent
+from app.core.logging import LogLevel
+from app.infrastructure.blob_manager import BaseBlobManager, LocalBlobManager
+from app.infrastructure.llm_chain.enums import OpenAIModelName
 
 
 class NodeNames(BaseEnum):

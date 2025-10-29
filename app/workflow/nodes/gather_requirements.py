@@ -1,16 +1,16 @@
 from langchain_core.messages import BaseMessage, AIMessage
 from langgraph.types import Command
 
-from workflow.models import (
+from app.workflow.models import (
     GatherRequirements,
     ManagedInquiryItem,
     ResearchAgentState,
 )
-from core.logging import LogLevel
-from domain.enums import BaseEnum, ManagedTaskStatus
-from infrastructure.blob_manager import BaseBlobManager
-from infrastructure.llm_chain.openai_chain import BaseOpenAIChain
-from infrastructure.llm_chain.enums import OpenAIModelName
+from app.core.logging import LogLevel
+from app.domain.enums import BaseEnum, ManagedTaskStatus
+from app.infrastructure.blob_manager import BaseBlobManager
+from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
+from app.infrastructure.llm_chain.enums import OpenAIModelName
 
 
 class NextNode(BaseEnum):
@@ -62,8 +62,8 @@ class GatherRequirementsNode(BaseOpenAIChain):
 
 if __name__ == "__main__":
     from langchain_core.messages import HumanMessage, AIMessage
-    from core.utils.nano_id import generate_id
-    from infrastructure.blob_manager import LocalBlobManager
+    from app.core.utils.nano_id import generate_id
+    from app.infrastructure.blob_manager import LocalBlobManager
 
     blob_manager = LocalBlobManager()
     chain = GatherRequirementsNode(OpenAIModelName.GPT_5_MINI, blob_manager)

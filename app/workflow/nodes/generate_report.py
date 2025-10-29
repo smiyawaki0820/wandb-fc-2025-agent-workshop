@@ -1,18 +1,18 @@
 from langgraph.graph import END
 from langgraph.types import Command
 
-from workflow.models import (
+from app.workflow.models import (
     ResearchAgentState,
 )
-from workflow.models.build_research_plan import (
+from app.workflow.models.build_research_plan import (
     ReportSection,
     ManagedTask,
 )
-from core.logging import LogLevel
-from domain.enums import BaseEnum
-from infrastructure.blob_manager.base import BaseBlobManager
-from infrastructure.llm_chain.openai_chain import BaseOpenAIChain
-from infrastructure.llm_chain.enums import OpenAIModelName
+from app.core.logging import LogLevel
+from app.domain.enums import BaseEnum
+from app.infrastructure.blob_manager.base import BaseBlobManager
+from app.infrastructure.llm_chain.openai_chain import BaseOpenAIChain
+from app.infrastructure.llm_chain.enums import OpenAIModelName
 
 
 class NextNode(BaseEnum):
