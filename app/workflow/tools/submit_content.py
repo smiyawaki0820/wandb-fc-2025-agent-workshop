@@ -45,7 +45,7 @@ class Submission(BaseModel):
     @computed_field
     @property
     def reason_for_rejection(self) -> str | None:
-        return None if self.is_accepted else self.reason
+        return None if self.status in [EvaluationStatus.REJECTED] else self.reason
 
 
 blob_manager = LocalBlobManager(log_level=LogLevel.TRACE)

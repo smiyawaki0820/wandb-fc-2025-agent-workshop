@@ -112,17 +112,22 @@ def invoke_graph(
         if interrupt_data := getattr(interrupt, "value", None):
             match interrupt_data.get("node"):
                 case Node.FEEDBACK_REQUIREMENTS.value:
-                    # 全ての質問に回答を求める場合
                     inquiry_items = deepcopy(interrupt_data.get("inquiry_items", []))
+                    # 質問リスト（inquiry_items）をイテレーション
                     for idx, inquiry_item in enumerate(inquiry_items):
+                        # 未回答の質問のみを対象に、ユーザーに回答を求める
                         if inquiry_item.status in [ManagedTaskStatus.NOT_STARTED]:
                             question = inquiry_item.question
                             user_input = str(input(f"{question} > "))
+                            # 回答を得たら、answer, status をそれぞれ更新する
                             inquiry_items[idx].answer = user_input or "NO ANSWER NEEDED"
                             inquiry_items[idx].status = ManagedTaskStatus.COMPLETED
+
+                    # Command(resume=...) で、ワークフローを再開する
                     return invoke_graph(
                         graph=graph,
                         input_data=Command(
+                            # ユーザーからの回答データを {ID: 回答} の形式で FeedbackRequirementsNode に返す
                             resume={item.id: item for item in inquiry_items}
                         ),
                         config=config,
@@ -130,5 +135,4 @@ def invoke_graph(
                 case _:
                     error_message = f"Unknown node: {interrupt_data.get('node')}"
                     raise ValueError(error_message)
-
     return result
