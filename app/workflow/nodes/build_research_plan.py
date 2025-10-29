@@ -65,31 +65,3 @@ class BuildResearchPlanNode(BaseOpenAIChain):
             if task.priority in Priority.up_to(self.target_priority)
         ]
         return research_plan
-
-
-
-if __name__ == "__main__":
-    from langchain_core.messages import HumanMessage
-    from app.infrastructure.blob_manager.local import LocalBlobManager
-    from app.domain.enums import Priority, ManagedTaskStatus
-    from app.domain.models import ManagedInquiryItem
-    from app.core.utils.nano_id import generate_id
-
-    blob_manager = LocalBlobManager()
-    decomposer = BuildResearchPlanNode(OpenAIModelName.GPT_5_NANO, blob_manager)
-    messages = [
-        HumanMessage(content="シーンテキストを考慮したテキスト画像検索について調査"),
-    ]
-    inquiry_items = [
-        ManagedInquiryItem(
-            id=generate_id(),
-            question="なぜシーンテキストを考慮したテキスト画像検索が必要なのか？",
-            answer=None,
-            priority=Priority.HIGH,
-            status=ManagedTaskStatus.PENDING,
-        ),
-    ]
-    research_plan = decomposer.run(
-        messages=messages, inquiry_items=inquiry_items, verbose=True
-    )
-    print(research_plan.model_dump_json(indent=2))
