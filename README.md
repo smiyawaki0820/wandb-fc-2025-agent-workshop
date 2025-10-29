@@ -62,6 +62,10 @@ bash scripts/create_env_file.sh
 uv run python main.py
 ```
 
+### サンプル出力例
+
+[レポート.md](/storage/outputs/research_report.md)
+
 ## 📖 主要機能
 
 ### ResearchAgent
