@@ -4,8 +4,8 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 from langchain_core.messages import AnyMessage
 
-from application.use_case.research_agent.models import ManagedInquiryItem
-from application.use_case.research_agent.models.build_research_plan import (
+from workflow.models import ManagedInquiryItem
+from workflow.models.build_research_plan import (
     ManagedTask,
     ReportSection,
 )

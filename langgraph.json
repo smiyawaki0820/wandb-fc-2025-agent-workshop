@@ -1,7 +1,7 @@
 {
   "dependencies": ["."],
   "graphs": {
-    "research_agent": "app.application.use_case.research_agent.agent:create_graph"
+    "research_agent": "app.workflow.agent:create_graph"
   },
   "env": ".env"
 }

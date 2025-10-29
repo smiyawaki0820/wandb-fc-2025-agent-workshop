@@ -1,7 +1,7 @@
 from langchain_core.messages import BaseMessage
 from langgraph.types import Command, Send
 
-from application.use_case.research_agent.models import (
+from workflow.models import (
     ResearchAgentState,
     ResearchPlan,
     ManagedInquiryItem,

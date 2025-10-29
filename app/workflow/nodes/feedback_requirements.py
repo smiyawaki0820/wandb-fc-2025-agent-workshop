@@ -1,7 +1,7 @@
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.types import Command, interrupt
 
-from application.use_case.research_agent.models import ResearchAgentState
+from workflow.models import ResearchAgentState
 from core.logging import LogLevel
 from domain.enums import BaseEnum
 from infrastructure.llm_chain import BaseChain
