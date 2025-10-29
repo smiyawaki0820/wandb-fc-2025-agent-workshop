@@ -4,6 +4,12 @@
 
 **イベント詳細**: https://fullyconnected.jp/
 
+**資料**
+- Google Colab
+  - [事前配布した準備ページ](https://colab.research.google.com/drive/1SMf0FO8XmYE8bYn8v8umAKtu3eka1JKo?usp=sharing)
+  - [当日説明に使用したページ](https://colab.research.google.com/drive/1tm2rNT_2axA5vklcagMlrFiH1vFozEHY?usp=sharing)
+
+
 ## 📋 概要
 
 本プロジェクトは、Weights & Biases (W&B) Fully Connected Tokyo 2025イベント向けの実践的なAIエージェントワークショップです。LangGraphを使用してマルチステップのリサーチエージェントを構築し、現場で活用可能な実装を学習できます。

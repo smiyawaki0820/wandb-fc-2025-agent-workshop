@@ -18,20 +18,18 @@ class FeedbackRequirementsNode(BaseChain):
 
     def __call__(self, state: ResearchAgentState) -> Command[Literal[Node.GATHER_REQUIREMENTS.value]]:
         self.log(object="feedback_requirements", message=f"state: {state}")
-        feedback_items = interrupt(
-            {
-                "node": self.__name__,
-                "inquiry_items": state.inquiry_items,
-            },
-        )
+        # ワークフローの実行を一時中断（interrupt）、ユーザーに回答の入力を要求
+        feedback_items = interrupt({
+            "node": self.__name__,
+            "inquiry_items": state.inquiry_items,
+        })
+        # ユーザーから回答が返ってきたらIDで照合された質問のステータスを更新
         for idx, previous_item in enumerate(state.inquiry_items):
             if current_item := feedback_items.get(previous_item.id):
                 state.inquiry_items[idx] = current_item
-                # messages に追加
-                state.messages.extend(
-                    [
-                        AIMessage(content=current_item.question),
-                        HumanMessage(content=current_item.answer),
-                    ]
-                )
+                # 対話履歴に Q&A （質問とユーザーからの回答）を追加
+                state.messages.extend([
+                    AIMessage(content=current_item.question),
+                    HumanMessage(content=current_item.answer),
+                ])
         return Command(goto=Node.GATHER_REQUIREMENTS.value, update=state)
